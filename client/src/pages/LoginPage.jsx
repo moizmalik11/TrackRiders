@@ -112,6 +112,12 @@ const LoginPage = () => {
         >
           {isRegistering ? "Switch to Login" : "Don't have an account? Register"}
         </button>
+        <button
+          onClick={() => navigate('/rider-login')}
+          className="mt-4 w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-200"
+        >
+          Are you a rider?
+        </button>
       </div>
     </div>
   );

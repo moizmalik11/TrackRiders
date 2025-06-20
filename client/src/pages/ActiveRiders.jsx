@@ -4,7 +4,7 @@ import { useRiders } from "../context/RiderContext";
 import MapModal from "../components/MapModal";
 
 const ActiveRiders = () => {
-  const { riders, updateRider } = useRiders();
+  const { riders, updateRider, fetchRiders } = useRiders();
 
   const [free, setFree] = useState([]);
   const [trackRider, setTrackRider] = useState(null);
@@ -64,6 +64,13 @@ const ActiveRiders = () => {
     };
     updateRider(rider.riderId, updatedRider);
   };
+
+  // Listen for 'riders-updated' event to refresh riders
+  useEffect(() => {
+    const handler = () => fetchRiders();
+    window.addEventListener('riders-updated', handler);
+    return () => window.removeEventListener('riders-updated', handler);
+  }, [fetchRiders]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
