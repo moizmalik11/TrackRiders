@@ -19,6 +19,12 @@ const riderSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+    email: {    
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     password: {
         type: String,
         default: '123',
