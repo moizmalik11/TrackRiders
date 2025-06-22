@@ -1,4 +1,4 @@
-const Rider = require('../models/Rider');
+const Rider = require('../models/rider');
 
 // Get all riders
 exports.getAllRiders = async (req, res) => {
@@ -117,6 +117,82 @@ exports.getRiderById = async (req, res) => {
         }
 
         res.json(rider);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Delete rider
+exports.deleteRider = async (req, res) => {
+    try {
+        const { riderId } = req.params;
+        const rider = await Rider.findOneAndDelete({ riderId });
+
+        if (!rider) {
+            return res.status(404).json({ message: 'Rider not found' });
+        }
+
+        res.json({ message: 'Rider deleted successfully' });
+    } catch (error) {
+        console.error('Delete rider error:', error);
+        res.status(500).json({ message: 'Error deleting rider' });
+    }
+};
+
+// Rider login
+exports.loginRider = async (req, res) => {
+    try {
+        const { riderId, password } = req.body;
+        const rider = await Rider.findOne({ riderId });
+        if (!rider) {
+            return res.status(404).json({ message: 'Rider not found' });
+        }
+        if (rider.password !== password) {
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+        res.json({
+            message: 'Login success',
+            rider: {
+                name: rider.name,
+                status: rider.status,
+                vehicle: rider.vehicle,
+                riderId: rider.riderId,
+                currentOrder: rider.currentOrder,
+                orderHistory: rider.orderHistory
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Mark order as delivered
+exports.deliverOrder = async (req, res) => {
+    try {
+        const { riderId } = req.params;
+        const rider = await Rider.findOne({ riderId });
+        if (!rider) {
+            return res.status(404).json({ message: 'Rider not found' });
+        }
+        if (!rider.currentOrder) {
+            return res.status(400).json({ message: 'No current order to deliver' });
+        }
+        // Move currentOrder to orderHistory
+        rider.orderHistory.push({
+            ...rider.currentOrder,
+            deliveredAt: new Date()
+        });
+        rider.currentOrder = null;
+        rider.status = 'free';
+        await rider.save();
+        res.json({ message: 'Order delivered', rider: {
+            name: rider.name,
+            status: rider.status,
+            vehicle: rider.vehicle,
+            riderId: rider.riderId,
+            currentOrder: rider.currentOrder,
+            orderHistory: rider.orderHistory
+        } });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

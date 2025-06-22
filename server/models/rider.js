@@ -19,6 +19,17 @@ const riderSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+    email: {    
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        default: '123',
+        trim: true
+    },
     vehicle: {
         type: String,
         required: true,
@@ -30,10 +41,18 @@ const riderSchema = new mongoose.Schema({
         default: 'free'
     },
     currentOrder: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order',
+        type: mongoose.Schema.Types.Mixed,
         default: null
     },
+    orderHistory: [
+        {
+            orderId: String,
+            product: String,
+            address: String,
+            Receiver: String,
+            deliveredAt: Date
+        }
+    ],
     location: {
         type: {
             type: String,
