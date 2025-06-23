@@ -60,6 +60,9 @@ mongoose.connect(config.MONGODB_URI)
             console.log('   - POST /api/auth/register - Register new admin');
             console.log('   - POST /api/auth/login - Login admin');
             console.log('   - GET /api/auth/me - Get current user');
+            console.log('   - GET /api/riders - Get all riders');
+            console.log('   - POST /api/riders - Create new rider');
+            
         });
     })
     .catch(err => {
