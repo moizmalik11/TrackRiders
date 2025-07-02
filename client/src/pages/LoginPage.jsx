@@ -99,24 +99,27 @@ const LoginPage = () => {
               placeholder="admin"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200"
-          >
-            {isRegistering ? "Register" : "Login"}
-          </button>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="w-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200"
+            >
+              {isRegistering ? "Register" : "Login"}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/rider-login')}
+              className="w-1/2 bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-200"
+            >
+              Rider Login
+            </button>
+          </div>
         </form>
         <button
           onClick={() => setIsRegistering(!isRegistering)}
           className="mt-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
         >
           {isRegistering ? "Switch to Login" : "Don't have an account? Register"}
-        </button>
-        <button
-          onClick={() => navigate('/rider-login')}
-          className="mt-4 w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-200"
-        >
-          Are you a rider?
         </button>
       </div>
     </div>
