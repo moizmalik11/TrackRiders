@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const riderSchema = new mongoose.Schema({
     name: {
@@ -55,15 +55,17 @@ const riderSchema = new mongoose.Schema({
             default: 'Point'
         },
         coordinates: {
+
             type: [Number],
             default: [0, 0]
         }
     }
 }, {
+    
     timestamps: true
 });
 
 // Create index for location queries
 riderSchema.index({ location: '2dsphere' });
 
-module.exports = mongoose.model('Rider', riderSchema);
+export default mongoose.model('Rider', riderSchema);

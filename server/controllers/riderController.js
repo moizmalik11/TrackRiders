@@ -1,7 +1,7 @@
-const Rider = require('../models/rider');
+import Rider from '../models/rider.js';
 
 // Get all riders
-exports.getAllRiders = async (req, res) => {
+export const getAllRiders = async (req, res) => {
     try {
         const riders = await Rider.find().sort({ createdAt: -1 });
         res.json(riders);
@@ -12,7 +12,7 @@ exports.getAllRiders = async (req, res) => {
 };
 
 // Get active riders
-exports.getActiveRiders = async (req, res) => {
+export const getActiveRiders = async (req, res) => {
     try {
         const riders = await Rider.find({ status: { $in: ['free', 'busy'] } }).sort({ createdAt: -1 });
         res.json(riders);
@@ -23,7 +23,7 @@ exports.getActiveRiders = async (req, res) => {
 };
 
 // Add new rider
-exports.addRider = async (req, res) => {
+export const addRider = async (req, res) => {
     try {
         const { name, riderId, phone, vehicle } = req.body;
 
@@ -60,7 +60,7 @@ exports.addRider = async (req, res) => {
 };
 
 // Update rider
-exports.updateRider = async (req, res) => {
+export const updateRider = async (req, res) => {
     try {
         const { status, currentOrder } = req.body;
         const rider = await Rider.findOneAndUpdate(
@@ -81,7 +81,7 @@ exports.updateRider = async (req, res) => {
 };
 
 // Update rider location
-exports.updateLocation = async (req, res) => {
+export const updateLocation = async (req, res) => {
     try {
         const { coordinates } = req.body;
         const rider = await Rider.findOneAndUpdate(
@@ -107,7 +107,7 @@ exports.updateLocation = async (req, res) => {
 };
 
 // Get rider by ID
-exports.getRiderById = async (req, res) => {
+export const getRiderById = async (req, res) => {
     try {
         const { riderId } = req.params;
         const rider = await Rider.findOne({ riderId });
@@ -123,7 +123,7 @@ exports.getRiderById = async (req, res) => {
 };
 
 // Delete rider
-exports.deleteRider = async (req, res) => {
+export const deleteRider = async (req, res) => {
     try {
         const { riderId } = req.params;
         const rider = await Rider.findOneAndDelete({ riderId });
@@ -140,7 +140,7 @@ exports.deleteRider = async (req, res) => {
 };
 
 // Rider login
-exports.loginRider = async (req, res) => {
+export const loginRider = async (req, res) => {
     try {
         const { riderId, password } = req.body;
         const rider = await Rider.findOne({ riderId });
@@ -167,7 +167,7 @@ exports.loginRider = async (req, res) => {
 };
 
 // Mark order as delivered
-exports.deliverOrder = async (req, res) => {
+export const deliverOrder = async (req, res) => {
     try {
         const { riderId } = req.params;
         const rider = await Rider.findOne({ riderId });
@@ -196,4 +196,16 @@ exports.deliverOrder = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+export default {
+    getAllRiders,
+    getActiveRiders,
+    addRider,
+    updateRider,
+    updateLocation,
+    getRiderById,
+    deleteRider,
+    loginRider,
+    deliverOrder
 }; 

@@ -1,16 +1,12 @@
-const express = require("express");
-const http = require("http");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const { Server } = require("socket.io");
-const config = require('./config/config');
-
-// Import routes
-const authRoutes = require('./routes/authRoutes');
-const riderRoutes = require('./routes/riderRoutes');
-
-// Import controllers
-const riderController = require('./controllers/riderController');
+import express from "express";
+import http from "http";
+import cors from "cors";
+import mongoose from "mongoose";
+import { Server } from "socket.io";
+import config from './config/config.js';
+import authRoutes from './routes/authRoutes.js';
+import riderRoutes from './routes/riderRoutes.js';
+import riderController from './controllers/riderController.js';
 
 const app = express();
 const server = http.createServer(app);
