@@ -7,17 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        'navy-black': '#0a0f1e',
         'brand-red': '#ff4b4b',
-        'brand-gold': '#ffb400',
-        'emerald-green': '#10b981',
+        'brand-dark': '#0f172a',
+        'brand-gray': '#64748b',
+        'brand-light': '#f8fafc',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
-      backgroundImage: {
-        'gradient-main': 'linear-gradient(to bottom right, #0a0f1e, #0f172a)',
-      }
     },
   },
   plugins: [],

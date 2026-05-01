@@ -1,22 +1,48 @@
 import React, { useState } from "react";
 import { useRiders } from "../context/RiderContext";
+import { useNavigate } from "react-router-dom";
+import { 
+  User, 
+  MapPin, 
+  Package, 
+  CheckCircle, 
+  LogOut, 
+  History, 
+  Bike,
+  Activity
+} from "lucide-react";
 
 const RiderPanel = () => {
   const [rider, setRider] = useState(() => JSON.parse(localStorage.getItem("rider")));
   const [error, setError] = useState("");
   const [locationStatus, setLocationStatus] = useState("");
   const { fetchRiders } = useRiders();
+  const navigate = useNavigate();
 
   if (!rider) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-        <div className="bg-white/10 p-8 rounded-xl shadow-lg border border-white/20">
-          <h2 className="text-2xl text-white font-bold mb-4">No Rider Data</h2>
-          <p className="text-gray-300">Please login as a rider first.</p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+        <div className="bg-white p-10 rounded-[32px] shadow-xl border border-slate-200 text-center max-w-sm">
+          <div className="w-16 h-16 bg-red-50 text-brand-red rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl text-slate-900 font-black mb-4">Access Denied</h2>
+          <p className="text-slate-500 mb-8 font-medium">Please login as a rider to access this panel.</p>
+          <button 
+            onClick={() => navigate('/rider-login')}
+            className="w-full bg-brand-red text-white py-4 rounded-2xl font-black hover:bg-red-600 transition-all"
+          >
+            Go to Login
+          </button>
         </div>
       </div>
     );
   }
+
+  const handleLogout = () => {
+    localStorage.removeItem("rider");
+    navigate("/rider-login");
+  };
 
   const handleOrderDelivered = async () => {
     setError("");
@@ -39,7 +65,7 @@ const RiderPanel = () => {
   };
 
   const handleGetLocation = () => {
-    setLocationStatus("Getting location...");
+    setLocationStatus("Detecting location...");
     
     if (!navigator.geolocation) {
       setLocationStatus("Geolocation is not supported by this browser.");
@@ -49,133 +75,165 @@ const RiderPanel = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const locationData = {
-          latitude,
-          longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: new Date(position.timestamp).toLocaleString()
-        };
-        
-        console.log("Current Location:", locationData);
-        setLocationStatus(`Location fetched successfully! Check console for details.`);
-        
-        // Clear status after 3 seconds
+        console.log("Current Location:", { latitude, longitude });
+        setLocationStatus(`Location shared with command center!`);
         setTimeout(() => setLocationStatus(""), 3000);
       },
       (error) => {
-        let errorMessage = "Failed to get location: ";
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage += "Permission denied. Please allow location access.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage += "Location information unavailable.";
-            break;
-          case error.TIMEOUT:
-            errorMessage += "Location request timed out.";
-            break;
-          default:
-            errorMessage += "An unknown error occurred.";
-            break;
-        }
-        setLocationStatus(errorMessage);
-        console.error("Location Error:", error);
+        setLocationStatus("Failed to get location. Please check permissions.");
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 60000
-      }
+      { enableHighAccuracy: true, timeout: 10000 }
     );
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-4">
-      <div className="bg-white/10 p-8 rounded-xl shadow-lg border border-white/20 w-full max-w-md mb-8">
-        <h2 className="text-2xl text-white font-bold mb-6 text-center">Rider Panel</h2>
-        <div className="space-y-4">
-          <div className="flex justify-between text-lg text-white">
-            <span className="font-semibold">Name:</span>
-            <span>{rider.name}</span>
-          </div>
-          <div className="flex justify-between text-lg text-white">
-            <span className="font-semibold">Status:</span>
-            <span>{rider.status}</span>
-          </div>
-          <div className="flex justify-between text-lg text-white">
-            <span className="font-semibold">Vehicle:</span>
-            <span>{rider.vehicle}</span>
-          </div>
-        </div>
-        
-        {/* Location Button */}
-        <div className="mt-6">
-          <button
-            onClick={handleGetLocation}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-semibold"
-          >
-            📍 Give Location
-          </button>
-          {locationStatus && (
-            <div className={`mt-2 p-2 rounded text-sm ${
-              locationStatus.includes("successfully") 
-                ? "text-green-400 bg-green-900/20" 
-                : "text-red-400 bg-red-900/20"
-            }`}>
-              {locationStatus}
+    <div className="min-h-screen bg-slate-50 p-6 lg:p-10">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-brand-red rounded-lg">
+                <Bike className="w-5 h-5 text-white" />
+              </div>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight">Rider Dashboard</h1>
             </div>
-          )}
+            <p className="text-slate-500 font-medium">Manage your active shift and deliveries.</p>
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl text-slate-600 font-bold hover:text-red-600 hover:border-red-100 hover:bg-red-50 transition-all shadow-sm"
+          >
+            <LogOut className="w-4 h-4" /> Sign Out
+          </button>
         </div>
 
-        {rider.status === "on-delivery" && rider.currentOrder && (
-          <div className="mt-8 bg-white/10 p-4 rounded-lg border border-white/20">
-            <h3 className="text-lg text-white font-semibold mb-2">Current Order</h3>
-            <div className="space-y-1 text-gray-300">
-              <div>Order ID: {rider.currentOrder.orderId}</div>
-              <div>Product: {rider.currentOrder.product}</div>
-              <div>Receiver: {rider.currentOrder.Receiver}</div>
-              <div>Address: {rider.currentOrder.address}</div>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Rider Info Card */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center">
+                  <User className="w-7 h-7 text-slate-900" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-slate-900">{rider.name}</h2>
+                  <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{rider.riderId}</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <span className="text-slate-500 font-bold text-sm flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-brand-red" /> Status
+                  </span>
+                  <span className={`text-sm font-black uppercase ${
+                    rider.status === 'free' ? 'text-emerald-600' : 'text-brand-red'
+                  }`}>{rider.status}</span>
+                </div>
+                <div className="flex justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <span className="text-slate-500 font-bold text-sm flex items-center gap-2">
+                    <Bike className="w-4 h-4 text-brand-red" /> Vehicle
+                  </span>
+                  <span className="text-sm font-black text-slate-900 uppercase">{rider.vehicle}</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleGetLocation}
+                className="w-full bg-slate-900 text-white py-4 rounded-2xl font-black hover:bg-black transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
+              >
+                <MapPin className="w-5 h-5" /> Update GPS Location
+              </button>
+              {locationStatus && (
+                <p className="mt-3 text-center text-xs font-bold text-brand-red animate-pulse">{locationStatus}</p>
+              )}
             </div>
-            <button
-              onClick={handleOrderDelivered}
-              className="mt-4 w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-200"
-            >
-              Order Delivered
-            </button>
-            {error && <div className="text-red-400 mt-2">{error}</div>}
           </div>
-        )}
-      </div>
-      {/* Order History Table */}
-      {rider.orderHistory && rider.orderHistory.length > 0 && (
-        <div className="bg-white/10 p-6 rounded-xl shadow-lg border border-white/20 w-full max-w-2xl">
-          <h3 className="text-xl text-white font-bold mb-4">Order History</h3>
-          <table className="min-w-full text-white">
-            <thead>
-              <tr>
-                <th className="px-4 py-2">Order ID</th>
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2">Receiver</th>
-                <th className="px-4 py-2">Address</th>
-                <th className="px-4 py-2">Delivered At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rider.orderHistory.map((order, idx) => (
-                <tr key={idx} className="bg-white/5">
-                  <td className="px-4 py-2">{order.orderId}</td>
-                  <td className="px-4 py-2">{order.product}</td>
-                  <td className="px-4 py-2">{order.Receiver}</td>
-                  <td className="px-4 py-2">{order.address}</td>
-                  <td className="px-4 py-2">{order.deliveredAt ? new Date(order.deliveredAt).toLocaleString() : ""}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+          {/* Active Order Card */}
+          <div className="lg:col-span-2 space-y-8">
+            {rider.status === "on-delivery" && rider.currentOrder ? (
+              <div className="bg-white border-2 border-brand-red rounded-[32px] p-8 shadow-xl shadow-brand-red/5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4">
+                  <span className="px-3 py-1 bg-brand-red text-white text-[10px] font-black uppercase rounded-full tracking-widest">Active Task</span>
+                </div>
+                
+                <h3 className="text-2xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                  <Package className="w-6 h-6 text-brand-red" /> Current Assignment
+                </h3>
+
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1 tracking-widest">Receiver Name</p>
+                    <p className="text-lg font-black text-slate-900">{rider.currentOrder.Receiver}</p>
+                  </div>
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1 tracking-widest">Order ID</p>
+                    <p className="text-lg font-black text-slate-900">#{rider.currentOrder.orderId}</p>
+                  </div>
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 col-span-2">
+                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1 tracking-widest">Delivery Address</p>
+                    <p className="text-lg font-black text-slate-900 flex items-start gap-2">
+                      <MapPin className="w-5 h-5 text-brand-red shrink-0 mt-1" />
+                      {rider.currentOrder.address}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleOrderDelivered}
+                  className="w-full bg-brand-red text-white py-5 rounded-2xl font-black text-xl hover:bg-red-600 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand-red/20 active:scale-95"
+                >
+                  <CheckCircle className="w-6 h-6" /> Mark as Delivered
+                </button>
+                {error && <p className="text-red-600 text-sm font-bold mt-4 text-center">{error}</p>}
+              </div>
+            ) : (
+              <div className="bg-white border border-slate-200 border-dashed rounded-[32px] p-16 text-center shadow-sm">
+                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Clock className="w-10 h-10 text-slate-300" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Waiting for Orders</h3>
+                <p className="text-slate-500 font-medium max-w-sm mx-auto">Your status is currently set to <b>Free</b>. Stay active to receive new delivery assignments.</p>
+              </div>
+            )}
+
+            {/* History Table */}
+            {rider.orderHistory && rider.orderHistory.length > 0 && (
+              <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm">
+                <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                  <History className="w-5 h-5 text-brand-red" /> Recent Deliveries
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="text-left border-b border-slate-100">
+                        <th className="pb-4 text-xs font-black text-slate-400 uppercase tracking-widest">Receiver</th>
+                        <th className="pb-4 text-xs font-black text-slate-400 uppercase tracking-widest">Product</th>
+                        <th className="pb-4 text-xs font-black text-slate-400 uppercase tracking-widest">Delivered At</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {rider.orderHistory.map((order, idx) => (
+                        <tr key={idx} className="group">
+                          <td className="py-4 font-bold text-slate-900">{order.Receiver}</td>
+                          <td className="py-4 text-slate-600 text-sm">{order.product}</td>
+                          <td className="py-4 text-slate-400 text-xs font-bold">
+                            {order.deliveredAt ? new Date(order.deliveredAt).toLocaleDateString() : ""}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-export default RiderPanel; 
+export default RiderPanel;

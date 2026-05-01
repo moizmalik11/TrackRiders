@@ -1,14 +1,26 @@
-// src/pages/ActiveRiders.jsx
 import React, { useState, useEffect } from "react";
 import { useRiders } from "../context/RiderContext";
+import { useNavigate } from "react-router-dom";
 import MapModal from "../components/MapModal";
+import { 
+  ArrowLeft, 
+  MapPin, 
+  Package, 
+  Clock, 
+  CheckCircle, 
+  Info, 
+  Search,
+  Navigation,
+  Calendar,
+  X
+} from "lucide-react";
 
 const ActiveRiders = () => {
   const { riders, updateRider, fetchRiders } = useRiders();
+  const navigate = useNavigate();
 
   const [free, setFree] = useState([]);
   const [trackRider, setTrackRider] = useState(null);
-
   const [onDelivery, setOnDelivery] = useState([]);
   const [onLeave, setOnLeave] = useState([]);
   const [showOrderModal, setShowOrderModal] = useState(false);
@@ -19,18 +31,6 @@ const ActiveRiders = () => {
     address: "",
     Receiver: "",
   });
-
-  const changeCordinates =()=>{
-    const rider = riders.find(r => r.riderId === selectedRider.riderId);
-    if (rider) {
-      const updatedRider = {
-        ...rider,
-        currentOrder: { ...orderInfo },
-      };
-      updateRider(rider.riderId, updatedRider);
-    }
-
-  }
 
   useEffect(() => {
     const active = riders.filter(r => r.status);
@@ -53,9 +53,9 @@ const ActiveRiders = () => {
     updateRider(rider.riderId, updatedRider);
     setShowOrderModal(false);
     setSelectedRider(null);
-
     setOrderInfo({ orderId: "", product: "", address: "", Receiver: "" });
   };
+
   const handleGiveLeave = (rider) => {
     const updatedRider = {
       ...rider,
@@ -65,7 +65,6 @@ const ActiveRiders = () => {
     updateRider(rider.riderId, updatedRider);
   };
 
-  // Listen for 'riders-updated' event to refresh riders
   useEffect(() => {
     const handler = () => fetchRiders();
     window.addEventListener('riders-updated', handler);
@@ -73,145 +72,149 @@ const ActiveRiders = () => {
   }, [fetchRiders]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
+    <div className="min-h-screen bg-slate-50 p-6 lg:p-10 selection:bg-brand-red/30">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-8 text-white text-center">Active Riders</h2>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+          <div>
+            <button 
+              onClick={() => navigate('/admin')}
+              className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-bold text-sm mb-4"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+            </button>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Active Operations</h1>
+            <p className="text-slate-500 font-medium mt-1">Live tracking and order management for your active fleet.</p>
+          </div>
+        </div>
 
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+        {/* Status Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-gray-300 text-lg">Free Riders</h3>
-                <p className="text-3xl font-bold text-white mt-2">{free.length}</p>
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Available Riders</h3>
+                <p className="text-4xl font-black text-slate-900">{free.length}</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center">
+                <CheckCircle className="w-7 h-7 text-emerald-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+          <div className="bg-white border-2 border-brand-red rounded-[32px] p-8 shadow-xl shadow-brand-red/5">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-gray-300 text-lg">On Delivery</h3>
-                <p className="text-3xl font-bold text-white mt-2">{onDelivery.length}</p>
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Active Deliveries</h3>
+                <p className="text-4xl font-black text-slate-900">{onDelivery.length}</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+              <div className="w-14 h-14 rounded-2xl bg-brand-red flex items-center justify-center">
+                <Navigation className="w-7 h-7 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+          <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-gray-300 text-lg">On Leave</h3>
-                <p className="text-3xl font-bold text-white mt-2">{onLeave.length}</p>
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">On Leave</h3>
+                <p className="text-4xl font-black text-slate-900">{onLeave.length}</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
+                <Calendar className="w-7 h-7 text-slate-400" />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Riders Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Free Riders */}
-          {free.map((rider, idx) => (
-            <div key={idx} className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white">{rider.name}</h3>
-                <span className="px-3 py-1 rounded-full text-sm bg-green-500/20 text-green-300">Free</span>
-              </div>
-              
-              <div className="space-y-2 text-gray-300">
-                <p>Rider ID: {rider.riderId}</p>
-                <p>Phone: {rider.phone}</p>
-                <p>Vehicle: {rider.vehicle}</p>
-              </div>
+        {/* Riders Section */}
+        <div className="space-y-12">
+          {/* Active Deliveries List */}
+          {onDelivery.length > 0 && (
+            <div>
+              <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse"></div>
+                Live Deliveries
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {onDelivery.map((rider, idx) => (
+                  <div key={`del-${idx}`} className="bg-brand-dark rounded-[32px] p-8 shadow-xl shadow-slate-900/10 relative group overflow-hidden">
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h3 className="text-xl font-black text-white">{rider.name}</h3>
+                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{rider.riderId}</p>
+                      </div>
+                      <div className="px-3 py-1 bg-brand-red text-white text-[10px] font-black uppercase rounded-full">Tracking</div>
+                    </div>
+                    
+                    {rider.currentOrder && (
+                      <div className="bg-white/5 rounded-2xl p-5 border border-white/10 mb-8 space-y-3">
+                        <div className="flex items-center gap-3">
+                          <Package className="w-4 h-4 text-brand-red" />
+                          <p className="text-sm text-slate-200 font-bold">{rider.currentOrder.product}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-4 h-4 text-brand-red" />
+                          <p className="text-xs text-slate-400 leading-relaxed font-medium">{rider.currentOrder.address}</p>
+                        </div>
+                      </div>
+                    )}
 
-              <div className="mt-6 flex flex-col gap-3">
-                <button
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
-                  onClick={() => handleGiveOrder(rider)}
-                >
-                  Give Order
-                </button>
-                <button
-                  className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 shadow-lg"
-                  onClick={() => handleGiveLeave(rider)}
-                >
-                  Give Leave
-                </button>
-              </div>
-            </div>
-          ))}
-
-          {/* On-delivery Riders */}
-          {onDelivery.map((rider, idx) => (
-            <div key={`del-${idx}`} className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white">{rider.name}</h3>
-                <span className="px-3 py-1 rounded-full text-sm bg-yellow-500/20 text-yellow-300">On Delivery</span>
-              </div>
-              
-              <div className="space-y-2 text-gray-300">
-                <p>Rider ID: {rider.riderId}</p>
-                <p>Phone: {rider.phone}</p>
-                <p>Vehicle: {rider.vehicle}</p>
-              </div>
-
-              {rider.currentOrder && (
-                <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
-                  <h4 className="text-white font-semibold mb-2">Current Order</h4>
-                  <div className="space-y-2 text-gray-300">
-                    <p>Order ID: {rider.currentOrder.orderId}</p>
-                    <p>Product: {rider.currentOrder.product}</p>
-                    <p>👤 Receiver: {rider.currentOrder.Receiver}</p>
-                    <p>📍 Address: {rider.currentOrder.address}</p>
+                    <button
+                      onClick={() => setTrackRider(rider)}
+                      className="w-full bg-white text-slate-900 py-4 rounded-2xl font-black hover:bg-slate-100 transition-all flex items-center justify-center gap-2"
+                    >
+                      View Live Map
+                    </button>
                   </div>
-                </div>
-              )}
-
-              <button
-                onClick={() => setTrackRider(rider)}
-                className="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
-              >
-                Track Rider
-              </button>
-            </div>
-          ))}
-
-          {/* On Leave Riders */}
-          {onLeave.map((rider, idx) => (
-            <div key={`leave-${idx}`} className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white">{rider.name}</h3>
-                <span className="px-3 py-1 rounded-full text-sm bg-red-500/20 text-red-300">On Leave</span>
+                ))}
               </div>
-              
-              <div className="space-y-2 text-gray-300">
-                <p>Rider ID: {rider.riderId}</p>
-                <p>Phone: {rider.phone}</p>
-                <p>Vehicle: {rider.vehicle}</p>
-              </div>
-
-              <button
-                className="w-full mt-4 bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-300 shadow-lg"
-                onClick={() => updateRider(rider.riderId, { status: "free" })}
-              >
-                End Leave
-              </button>
             </div>
-          ))}
+          )}
+
+          {/* Available Riders List */}
+          {free.length > 0 && (
+            <div>
+              <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                Available Fleet
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {free.map((rider, idx) => (
+                  <div key={idx} className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm hover:shadow-md transition-all group">
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h3 className="text-xl font-black text-slate-900">{rider.name}</h3>
+                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{rider.riderId}</p>
+                      </div>
+                      <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-full tracking-widest">Free</span>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400 font-bold">Vehicle</span>
+                        <span className="text-slate-900 font-black uppercase">{rider.vehicle}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <button
+                        className="bg-brand-red text-white px-4 py-4 rounded-2xl font-black text-xs hover:bg-red-600 transition-all shadow-lg shadow-brand-red/10 active:scale-95"
+                        onClick={() => handleGiveOrder(rider)}
+                      >
+                        Assign Order
+                      </button>
+                      <button
+                        className="bg-slate-100 text-slate-600 px-4 py-4 rounded-2xl font-black text-xs hover:bg-slate-200 transition-all active:scale-95"
+                        onClick={() => handleGiveLeave(rider)}
+                      >
+                        Give Leave
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -219,59 +222,76 @@ const ActiveRiders = () => {
         <MapModal rider={trackRider} onClose={() => setTrackRider(null)} />
       )}
 
-      {/* Order Modal */}
+      {/* Order Assignment Modal */}
       {showOrderModal && selectedRider && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md border border-purple-500/20">
-            <h2 className="text-xl font-semibold text-white mb-4">Give Order to {selectedRider.name}</h2>
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Order ID"
-                value={orderInfo.orderId}
-                onChange={(e) => setOrderInfo({ ...orderInfo, orderId: e.target.value })}
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
-              />
-              <input
-                type="text"
-                placeholder="Product Name"
-                value={orderInfo.product}
-                onChange={(e) => setOrderInfo({ ...orderInfo, product: e.target.value })}
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
-              />
-              <input
-                type="text"
-                placeholder="Receiver Name"
-                value={orderInfo.Receiver}
-                onChange={(e) => setOrderInfo({ ...orderInfo, Receiver: e.target.value })}
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
-              />
-              <input
-                type="text"
-                placeholder="Delivery Address"
-                value={orderInfo.address}
-                onChange={(e) => setOrderInfo({ ...orderInfo, address: e.target.value })}
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
-              />
-              
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() => {
-                    setShowOrderModal(false);
-                    setSelectedRider(null);
-                    setOrderInfo({ orderId: "", product: "", address: "", Receiver: "" });
-                  }}
-                  className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleOrderSubmit(selectedRider)}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all"
-                >
-                  Assign Order
-                </button>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6 z-[100]">
+          <div className="bg-white rounded-[40px] shadow-2xl w-full max-w-xl p-10 border border-slate-200 relative">
+            <button
+              onClick={() => {
+                setShowOrderModal(false);
+                setSelectedRider(null);
+                setOrderInfo({ orderId: "", product: "", address: "", Receiver: "" });
+              }}
+              className="absolute top-8 right-8 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+            > 
+              <X className="w-6 h-6" />
+            </button>
+
+            <header className="mb-10">
+              <h3 className="text-2xl font-black text-slate-900 mb-2">Assign Delivery</h3>
+              <p className="text-slate-500 font-medium text-sm">Target Rider: <b>{selectedRider.name}</b></p>
+            </header>
+
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Order ID</label>
+                  <input
+                    type="text"
+                    placeholder="ORD-XXXX"
+                    value={orderInfo.orderId}
+                    onChange={(e) => setOrderInfo({ ...orderInfo, orderId: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:border-brand-red/30 focus:outline-none transition-all"
+                  />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Receiver Name</label>
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    value={orderInfo.Receiver}
+                    onChange={(e) => setOrderInfo({ ...orderInfo, Receiver: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:border-brand-red/30 focus:outline-none transition-all"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Product Details</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 2x Medium Pizza"
+                    value={orderInfo.product}
+                    onChange={(e) => setOrderInfo({ ...orderInfo, product: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:border-brand-red/30 focus:outline-none transition-all"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Delivery Address</label>
+                  <input
+                    type="text"
+                    placeholder="Exact street address"
+                    value={orderInfo.address}
+                    onChange={(e) => setOrderInfo({ ...orderInfo, address: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:border-brand-red/30 focus:outline-none transition-all"
+                  />
+                </div>
               </div>
+              
+              <button
+                onClick={() => handleOrderSubmit(selectedRider)}
+                className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-lg active:scale-95"
+              >
+                Confirm Assignment
+              </button>
             </div>
           </div>
         </div>

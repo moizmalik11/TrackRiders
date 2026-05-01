@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRiders } from "../context/RiderContext";
+import { 
+  Users, 
+  UserPlus, 
+  Activity, 
+  LogOut, 
+  Plus, 
+  X, 
+  ChevronRight,
+  ShieldCheck,
+  LayoutDashboard,
+  Search,
+  Settings
+} from "lucide-react";
 
 const AdminDashboard = () => {
   const [showForm, setShowForm] = useState(false);
@@ -11,31 +24,26 @@ const AdminDashboard = () => {
     phone: "",
     riderId: "",
     vehicle: "",
-    status: "free", // default status
+    status: "free",
   });
 
   const navigate = useNavigate();
-  const { riders, addRider } = useRiders();
+  const { addRider } = useRiders();
 
   useEffect(() => {
-    // Get admin email from localStorage or context
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/');
       return;
     }
 
-    // Fetch admin info
     const fetchAdminInfo = async () => {
       try {
         const response = await fetch('http://localhost:5001/api/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         if (response.ok) {
-          // Extract username from email (everything before @)
           const username = data.email.split('@')[0];
           setAdminName(username);
         }
@@ -54,57 +62,58 @@ const AdminDashboard = () => {
 
   const handleAddRider = (e) => {
     e.preventDefault();
-    
-    // Validate required fields
     if (!newRider.name || !newRider.phone || !newRider.riderId || !newRider.vehicle) {
       alert("Please fill all required fields");
       return;
     }
-
-    // Add the rider
     addRider(newRider);
-    
-    // Reset form
-    setNewRider({
-      name: "",
-      phone: "",
-      riderId: "",
-      vehicle: "",
-      status: "free"
-    });
+    setNewRider({ name: "", phone: "", riderId: "", vehicle: "", status: "free" });
     setShowForm(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-brand-red/30">
       {/* Navigation Bar */}
-      <nav className="bg-white/10 backdrop-blur-lg border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-white">Track Riders</h1>
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate('/')}>
+            <div className="p-2 bg-brand-red rounded-lg">
+              <ShieldCheck className="w-6 h-6 text-white" />
             </div>
+            <span className="text-xl font-black tracking-tight text-slate-900">TrackRiders Admin</span>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <button className="text-slate-400 hover:text-slate-900 transition-colors p-2">
+              <Search className="w-5 h-5" />
+            </button>
+            <button className="text-slate-400 hover:text-slate-900 transition-colors p-2">
+              <Settings className="w-5 h-5" />
+            </button>
+            <div className="w-px h-6 bg-slate-200 mx-2"></div>
             
-            {/* Profile Section */}
             <div className="relative">
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-3 focus:outline-none"
+                className="flex items-center gap-3 p-1.5 pr-4 rounded-full bg-slate-100 hover:bg-slate-200 transition-all focus:outline-none"
               >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
-                  {adminName ? adminName[0].toUpperCase() : 'M'}
+                <div className="w-8 h-8 rounded-full bg-brand-red flex items-center justify-center text-white font-black text-xs">
+                  {adminName ? adminName[0].toUpperCase() : 'A'}
                 </div>
-                <span className="text-white font-medium">{adminName}</span>
+                <span className="text-slate-900 font-bold text-sm hidden md:block">{adminName}</span>
               </button>
 
-              {/* Profile Dropdown Menu */}
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-1 z-10 border border-white/20">
+                <div className="absolute right-0 mt-3 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-10 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-slate-50 mb-1">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Admin Account</p>
+                    <p className="text-sm font-bold text-slate-900 truncate">{adminName}</p>
+                  </div>
                   <button
                     onClick={handleSignOut}
-                    className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/20 transition-colors duration-200"
+                    className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors font-bold"
                   >
-                    Sign Out
+                    <LogOut className="w-4 h-4" /> Sign Out
                   </button>
                 </div>
               )}
@@ -114,150 +123,155 @@ const AdminDashboard = () => {
       </nav>
 
       {/* Main Content */}
-      <div className="p-6">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-white">Welcome to Admin Panel</h1>
-          <p className="text-gray-300 text-lg">Keep track of your riders efficiently</p>
-        </div>
+      <div className="flex-1 max-w-7xl mx-auto w-full p-8 lg:p-12">
+        <header className="mb-12">
+          <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Fleet Command</h1>
+          <p className="text-slate-500 font-medium">Manage, monitor, and scale your delivery operations.</p>
+        </header>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* All Riders Info Box */}
-          <div className="bg-white/10 rounded-xl shadow-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-            <div className="bg-blue-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* All Riders Box */}
+          <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-sm hover:shadow-md transition-all group">
+            <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-brand-red/5 transition-colors">
+              <Users className="w-7 h-7 text-slate-900 group-hover:text-brand-red transition-colors" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">All Riders Info</h2>
-            <p className="text-gray-300 mb-4">View all registered riders in the system</p>
+            <h2 className="text-xl font-black text-slate-900 mb-2 tracking-tight">Rider Directory</h2>
+            <p className="text-slate-500 text-sm font-medium mb-8 leading-relaxed">Access full details and profiles of every registered rider in your fleet.</p>
             <button
               onClick={() => navigate("/riders")}
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
+              className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-2xl font-black hover:bg-black transition-all shadow-lg active:scale-95"
             >
-              See Details
+              Manage Fleet <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
           {/* Active Riders Box */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-            <div className="bg-gradient-to-r from-green-500 to-teal-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+          <div className="bg-white border-2 border-brand-red rounded-[32px] p-8 shadow-xl shadow-brand-red/5 group">
+            <div className="w-14 h-14 bg-brand-red rounded-2xl flex items-center justify-center mb-8">
+              <Activity className="w-7 h-7 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Active Riders</h2>
-            <p className="text-gray-300 mb-4">Track riders currently on delivery</p>
+            <h2 className="text-xl font-black text-slate-900 mb-2 tracking-tight">Live Tracking</h2>
+            <p className="text-slate-500 text-sm font-medium mb-8 leading-relaxed">Real-time status monitoring of riders currently executing deliveries.</p>
             <button
-              onClick={() => navigate("/riders/active")}
-              className="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-300 shadow-lg"
+              onClick={() => navigate("/active-riders")}
+              className="w-full flex items-center justify-center gap-2 bg-brand-red text-white px-6 py-4 rounded-2xl font-black hover:bg-red-600 transition-all shadow-lg active:scale-95"
             >
-              See Details
+              Monitor Live <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
           {/* Add New Rider Box */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-            <div className="bg-pink-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
+          <div className="bg-slate-900 rounded-[32px] p-8 shadow-xl group">
+            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-8">
+              <UserPlus className="w-7 h-7 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Add New Rider</h2>
-            <p className="text-gray-300 mb-4">Register a new rider into the system</p>
+            <h2 className="text-xl font-black text-white mb-2 tracking-tight">Expand Fleet</h2>
+            <p className="text-slate-400 text-sm font-medium mb-8 leading-relaxed">Register and onboard a new delivery professional into your organization.</p>
             <button
               onClick={() => setShowForm(true)}
-              className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg"
+              className="w-full flex items-center justify-center gap-2 bg-white text-slate-900 px-6 py-4 rounded-2xl font-black hover:bg-slate-100 transition-all active:scale-95"
             >
-              Add Rider
+              <Plus className="w-5 h-5" /> Add Rider
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Add Rider Form */}
-        {showForm && (
-          <div className="fixed inset-0 bg-black/50  flex items-center justify-center p-4">
-            <form
-              onSubmit={handleAddRider}
-              className="bg-white/10 backdrop-blur-lg rounded-xl shadow-xl w-full md:w-1/2 p-6 border border-white/20"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-semibold text-white">New Rider Details</h3>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="text-gray-400 hover:text-white"
-                > 
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+      {/* Footer Branding */}
+      <footer className="p-8 text-center">
+        <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+          Powered by TrackRiders Enterprise v2.0
+        </p>
+      </footer>
 
-              <div className="space-y-4">
+      {/* Add Rider Modal */}
+      {showForm && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6 z-[100]">
+          <div 
+            className="bg-white rounded-[40px] shadow-2xl w-full max-w-xl p-10 border border-slate-200 relative"
+          >
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-8 right-8 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+            > 
+              <X className="w-6 h-6" />
+            </button>
+
+            <header className="mb-10">
+              <h3 className="text-2xl font-black text-slate-900 mb-2">New Rider Profile</h3>
+              <p className="text-slate-500 font-medium text-sm">Fill in the details to register a new member.</p>
+            </header>
+
+            <form onSubmit={handleAddRider} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-gray-300 mb-2">Name</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                   <input
                     type="text"
                     value={newRider.name}
                     onChange={(e) => setNewRider({ ...newRider, name: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-300 focus:outline-none focus:border-brand-red/50 transition-all font-medium"
+                    placeholder="e.g. John Doe"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 mb-2">Phone</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Phone Number</label>
                   <input
                     type="text"
                     value={newRider.phone}
                     onChange={(e) => setNewRider({ ...newRider, phone: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-300 focus:outline-none focus:border-brand-red/50 transition-all font-medium"
+                    placeholder="+92 3XX XXXXXXX"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 mb-2">Rider ID</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">System Rider ID</label>
                   <input
                     type="text"
                     value={newRider.riderId}
                     onChange={(e) => setNewRider({ ...newRider, riderId: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-300 focus:outline-none focus:border-brand-red/50 transition-all font-medium"
+                    placeholder="RID-XXXX"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 mb-2">Vehicle</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Vehicle Type</label>
                   <input
                     type="text"
                     value={newRider.vehicle}
                     onChange={(e) => setNewRider({ ...newRider, vehicle: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-300 focus:outline-none focus:border-brand-red/50 transition-all font-medium"
+                    placeholder="e.g. Honda CD-70"
                     required
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4 mt-6">
+              <div className="flex gap-4 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 text-gray-300 hover:text-white transition-colors duration-200"
+                  className="flex-1 px-8 py-4 text-slate-500 font-bold hover:text-slate-900 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
+                  className="flex-[2] bg-brand-red text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-red-600 transition-all shadow-lg shadow-brand-red/20 active:scale-95"
                 >
-                  Add Rider
+                  Create Profile
                 </button>
               </div>
             </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
