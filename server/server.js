@@ -58,13 +58,11 @@ mongoose.connect(config.MONGODB_URI)
             console.log('   - POST /api/auth/login - Login admin');
             console.log('   - GET /api/auth/me - Get current user');
             console.log('   - GET /api/riders - Get all riders');
-            console.log('   - GET /api/riders/active - Get active riders');
-            console.log('   - POST /api/riders - Add new rider');
-            console.log('   - PUT /api/riders/:riderId - Update rider');
-            console.log('   - PUT /api/riders/:riderId/location - Update rider location');
+
         });
     })
     .catch(err => {
+        console.error(err.message);
         console.error("❌ MongoDB Connection Error:", err);
         process.exit(1); // Exit if cannot connect to database
     });
@@ -107,6 +105,10 @@ process.on('SIGINT', () => {
     console.log('SIGINT signal received: closing HTTP server');
     server.close(() => {
         console.log('HTTP server closed');
+
+        io.close(() => {
+            console.log('Socket.io server closed');
+        });
         mongoose.connection.close(false, () => {
             console.log('MongoDB connection closed');
             process.exit(0);
