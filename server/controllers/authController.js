@@ -1,8 +1,8 @@
-const User = require('../models/user');
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+import User from '../models/user.js';
+import jwt from 'jsonwebtoken';
+import config from '../config/config.js';
 
-// Generate JWT Token
+
 const generateToken = (userId) => {
     return jwt.sign({ userId }, config.JWT_SECRET, {
         expiresIn: '7d'
@@ -10,7 +10,7 @@ const generateToken = (userId) => {
 };
 
 // Register new user
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
     try {
         const { email, password, name } = req.body;
 
@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
             email,
             password,
             name,
-            role: 'admin' // Set role as admin for all registered users
+            role: 'admin' // Set role as admin 
         });
 
         await user.save();
@@ -55,7 +55,7 @@ exports.register = async (req, res) => {
 };
 
 // Login user
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -95,7 +95,7 @@ exports.login = async (req, res) => {
 };
 
 // Get current user
-exports.getCurrentUser = async (req, res) => {
+export const getCurrentUser = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).select('-password');
         if (!user) {

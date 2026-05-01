@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
+import riderController from '../controllers/riderController.js';
+import auth from '../middleware/auth.js';
 const router = express.Router();
-const riderController = require('../controllers/riderController');
-const auth = require('../middleware/auth');
 
 // Rider login (no auth required)
 router.post('/login', riderController.loginRider);
@@ -33,4 +33,4 @@ router.put('/:riderId/location', riderController.updateLocation);
 // Delete rider
 router.delete('/:riderId', riderController.deleteRider);
 
-module.exports = router; 
+export default router; 
