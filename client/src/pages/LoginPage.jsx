@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Lock, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -74,53 +75,97 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-500 via-purple-800 to-gray-500 flex items-center justify-center p-4">
-      <div className="bg-white/2  rounded-2xl shadow-xl p-8 border border-white/20 w-full max-w-md">
-        <h2 className="text-2xl font-bold  text-center text-white">Admin Login</h2>
-        {error && <div className="text-red-300 mb-4">{error}</div>}
-        <form onSubmit={isRegistering ? handleRegister : handleLogin}>
-          <div className="mb-4">
-            <label className="block text-gray-300">Email</label>
-            <input
-              type="email"
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="enter email : admin@gmail.com"
-            />
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 selection:bg-brand-red/30">
+      {/* Back to Home */}
+      <button 
+        onClick={() => navigate('/')}
+        className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-bold text-sm"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to Home
+      </button>
+
+      <div className="w-full max-w-md">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-red/10 mb-6">
+            <ShieldCheck className="w-8 h-8 text-brand-red" />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-300">Password</label>
-            <input
-              type="password"
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="admin"
-            />
-          </div>
-          <div className="flex gap-4">
+          <h1 className="text-3xl font-black text-slate-900 mb-2">
+            {isRegistering ? "Create Admin Account" : "Admin Dashboard"}
+          </h1>
+          <p className="text-slate-500 font-medium">
+            {isRegistering ? "Join TrackRiders to manage your fleet." : "Sign in to manage your riders and deliveries."}
+          </p>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-[32px] p-10 shadow-xl shadow-slate-200/50">
+          {error && (
+            <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-sm font-bold mb-6 flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-600"></div>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={isRegistering ? handleRegister : handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="email"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-red/50 transition-all font-medium"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@trackriders.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="password"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-red/50 transition-all font-medium"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            </div>
+
             <button
               type="submit"
-              className="w-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200"
+              className="w-full bg-brand-red text-white py-4 rounded-2xl font-black text-lg hover:bg-red-600 transition-all shadow-lg shadow-brand-red/20 active:scale-95"
             >
-              {isRegistering ? "Register" : "Login"}
+              {isRegistering ? "Create Account" : "Sign In to Dashboard"}
             </button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={() => setIsRegistering(!isRegistering)}
+              className="col-span-2 text-center text-sm font-bold text-slate-500 hover:text-brand-red transition-colors"
+            >
+              {isRegistering ? "Already have an account? Login" : "Need an organization account? Register"}
+            </button>
+            
             <button
               type="button"
               onClick={() => navigate('/rider-login')}
-              className="w-1/2 bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all duration-200"
+              className="col-span-2 mt-2 bg-slate-900 text-white py-4 rounded-2xl font-black text-lg hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2"
             >
-              Rider Login
+              Rider Login Portal
             </button>
           </div>
-        </form>
-        <button
-          onClick={() => setIsRegistering(!isRegistering)}
-          className="mt-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
-        >
-          {isRegistering ? "Switch to Login" : "Don't have an account? Register"}
-        </button>
+        </div>
+
+        <p className="mt-10 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">
+          © 2026 TrackRiders Logistics Platform
+        </p>
       </div>
     </div>
   );
