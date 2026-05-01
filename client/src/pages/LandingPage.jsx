@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Map as MapIcon, 
@@ -59,12 +60,12 @@ const Navbar = () => {
             </a>
           ))}
           <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-            <a href="/rider-login" className="px-5 py-2.5 rounded-lg text-slate-900 border border-slate-200 font-bold text-xs uppercase tracking-widest hover:border-slate-900 transition-all">
+            <Link to="/rider-login" className="px-5 py-2.5 rounded-lg text-slate-900 border border-slate-200 font-bold text-xs uppercase tracking-widest hover:border-slate-900 transition-all">
               Rider Portal
-            </a>
-            <a href="/login" className="bg-brand-red px-5 py-2.5 rounded-lg text-white font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-sm">
+            </Link>
+            <Link to="/login" className="bg-brand-red px-5 py-2.5 rounded-lg text-white font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-sm">
               Admin Login
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -90,8 +91,8 @@ const Navbar = () => {
                 </a>
               ))}
               <hr className="border-slate-100" />
-              <a href="/rider-login" className="w-full py-4 rounded-xl font-black text-center text-slate-900 border-2 border-slate-900 uppercase tracking-widest text-xs">Rider Portal</a>
-              <a href="/login" className="w-full bg-brand-red py-4 rounded-xl font-black text-center text-white uppercase tracking-widest text-xs shadow-lg shadow-brand-red/20">Admin Access</a>
+              <Link to="/rider-login" className="w-full py-4 rounded-xl font-black text-center text-slate-900 border-2 border-slate-900 uppercase tracking-widest text-xs" onClick={() => setMobileMenuOpen(false)}>Rider Portal</Link>
+              <Link to="/login" className="w-full bg-brand-red py-4 rounded-xl font-black text-center text-white uppercase tracking-widest text-xs shadow-lg shadow-brand-red/20" onClick={() => setMobileMenuOpen(false)}>Admin Access</Link>
             </div>
           </motion.div>
         )}
@@ -258,9 +259,9 @@ const LandingPage = () => {
               Real-time delivery management with live GPS tracking, instant order assignment, and smart status monitoring.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="/login" className="bg-brand-red px-8 py-4 rounded-lg text-white font-black text-lg flex items-center justify-center gap-2 hover:bg-red-600 transition-all shadow-md">
+              <Link to="/login" className="bg-brand-red px-8 py-4 rounded-lg text-white font-black text-lg flex items-center justify-center gap-2 hover:bg-red-600 transition-all shadow-md">
                 Live Demo <ArrowRight className="w-5 h-5" />
-              </a>
+              </Link>
               <button className="px-8 py-4 rounded-lg border-2 border-slate-900 text-slate-900 font-bold text-lg flex items-center justify-center gap-2 hover:bg-slate-900 hover:text-white transition-all">
                 <Code className="w-5 h-5" /> Source Code
               </button>
@@ -448,9 +449,9 @@ const LandingPage = () => {
           <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto font-medium">
             Join modern logistics teams using TrackRiders for precision tracking and seamless management.
           </p>
-          <a href="/login" className="bg-brand-red text-white px-12 py-5 rounded-lg font-black text-xl hover:bg-red-600 transition-all shadow-lg flex items-center justify-center gap-3 mx-auto">
+          <Link to="/login" className="bg-brand-red text-white px-12 py-5 rounded-lg font-black text-xl hover:bg-red-600 transition-all shadow-lg flex items-center justify-center gap-3 mx-auto">
             Get Started Now <ArrowRight />
-          </a>
+          </Link>
           
           <div className="mt-12 flex items-center justify-center gap-6 text-gray-500 font-bold text-sm">
             <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-gold" /> Modern</div>
