@@ -122,8 +122,8 @@ const AdminDashboard = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* All Riders Info Box */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+          <div className="bg-white/10 rounded-xl shadow-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
+            <div className="bg-blue-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
             <p className="text-gray-300 mb-4">View all registered riders in the system</p>
             <button
               onClick={() => navigate("/riders")}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
+              className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
             >
               See Details
             </button>
@@ -157,7 +157,7 @@ const AdminDashboard = () => {
 
           {/* Add New Rider Box */}
           <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-xl p-6 border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-pink-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
@@ -166,7 +166,7 @@ const AdminDashboard = () => {
             <p className="text-gray-300 mb-4">Register a new rider into the system</p>
             <button
               onClick={() => setShowForm(true)}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg"
+              className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg"
             >
               Add Rider
             </button>
@@ -175,7 +175,7 @@ const AdminDashboard = () => {
 
         {/* Add Rider Form */}
         {showForm && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/50  flex items-center justify-center p-4">
             <form
               onSubmit={handleAddRider}
               className="bg-white/10 backdrop-blur-lg rounded-xl shadow-xl w-full md:w-1/2 p-6 border border-white/20"
