@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { riderAPI } from '../services/api';
+import { deleteRider as apiDeleteRider } from '../api/api';
 
 const RiderContext = createContext();
 
@@ -79,6 +80,17 @@ export const RiderProvider = ({ children }) => {
     }
   };
 
+  // Delete rider
+  const deleteRider = async (riderId) => {
+    try {
+      await apiDeleteRider(riderId);
+      setRiders(prevRiders => prevRiders.filter(rider => rider.riderId !== riderId));
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  };
+
   // Fetch riders on mount
   useEffect(() => {
     fetchRiders();
@@ -91,7 +103,8 @@ export const RiderProvider = ({ children }) => {
     addRider,
     updateRider,
     updateLocation,
-    fetchRiders
+    fetchRiders,
+    deleteRider
   };
 
   return (

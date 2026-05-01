@@ -2,7 +2,21 @@ import React from "react";
 import { useRiders } from "../context/RiderContext";
 
 const RiderListPage = () => {
-  const { riders } = useRiders();
+  const { riders, deleteRider } = useRiders();
+
+  const handleDelete = async (rider) => {
+    if (rider.status === "on-delivery") {
+      alert("Rider is on delivery, you cannot delete it now.");
+      return;
+    }
+    if (window.confirm(`Are you sure you want to delete rider ${rider.name}?`)) {
+      try {
+        await deleteRider(rider.riderId);
+      } catch (err) {
+        alert("Failed to delete rider: " + err.message);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
@@ -25,8 +39,17 @@ const RiderListPage = () => {
             riders.map((rider, index) => (
               <div
                 key={index}
-                className="relative bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 transition-all duration-300"
+                className="group relative bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 transition-all duration-300"
               >
+                {/* Delete button, positioned at top right corner */}
+                <button
+                  onClick={() => handleDelete(rider)}
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded shadow transition-opacity duration-300 z-10 text-sm"
+                  title="Delete Rider"
+                >
+                  Delete
+                </button>
+
                 <div className="relative">
                   <img
                     src={`https://img.freepik.com/premium-vector/delivery-man-with-package-hat-guy-wearing-uniform-fast-service-illustration_619097-100.jpg`}
@@ -68,7 +91,8 @@ const RiderListPage = () => {
                     </div>
 
                     <button
-                     className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg">
+                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg"
+                    >
                       {rider.name}
                     </button>
                   </div>
