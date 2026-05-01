@@ -12,10 +12,10 @@ const generateToken = (userId) => {
 // Register new user
 export const register = async (req, res) => {
     try {
-        const { email, password, name } = req.body;
+        const { email, password, name, organizationName, city } = req.body;
 
         // Validate input
-        if (!email || !password || !name) {
+        if (!email || !password || !name || !organizationName || !city) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
@@ -30,6 +30,8 @@ export const register = async (req, res) => {
             email,
             password,
             name,
+            organizationName,
+            city,
             role: 'admin' // Set role as admin 
         });
 

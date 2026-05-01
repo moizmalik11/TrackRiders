@@ -58,9 +58,14 @@ const Navbar = () => {
               {link.name}
             </a>
           ))}
-          <a href="/login" className="bg-brand-red px-6 py-2.5 rounded-lg text-white font-bold text-sm hover:bg-red-600 transition-all shadow-sm">
-            Get Started
-          </a>
+          <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
+            <a href="/rider-login" className="px-5 py-2.5 rounded-lg text-slate-900 border border-slate-200 font-bold text-xs uppercase tracking-widest hover:border-slate-900 transition-all">
+              Rider Portal
+            </a>
+            <a href="/login" className="bg-brand-red px-5 py-2.5 rounded-lg text-white font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-sm">
+              Admin Login
+            </a>
+          </div>
         </div>
 
         {/* Mobile Toggle */}
@@ -80,11 +85,13 @@ const Navbar = () => {
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (
-                <a key={link.name} href={link.href} className="text-slate-600 hover:text-slate-900" onClick={() => setMobileMenuOpen(false)}>
+                <a key={link.name} href={link.href} className="text-slate-600 font-bold hover:text-slate-900" onClick={() => setMobileMenuOpen(false)}>
                   {link.name}
                 </a>
               ))}
-              <a href="/login" className="w-full bg-brand-red py-3 rounded-lg font-bold text-center text-white">Get Started</a>
+              <hr className="border-slate-100" />
+              <a href="/rider-login" className="w-full py-4 rounded-xl font-black text-center text-slate-900 border-2 border-slate-900 uppercase tracking-widest text-xs">Rider Portal</a>
+              <a href="/login" className="w-full bg-brand-red py-4 rounded-xl font-black text-center text-white uppercase tracking-widest text-xs shadow-lg shadow-brand-red/20">Admin Access</a>
             </div>
           </motion.div>
         )}
