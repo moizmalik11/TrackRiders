@@ -4,6 +4,9 @@ import LoginPage from "./pages/LoginPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import RiderListPage from "./pages/RiderListPage";
 import ActiveRiders from "./pages/ActiveRiders";
+import RiderLogin from "./pages/RiderLogin";
+import RiderPanel from "./pages/RiderPanel";
+
 const App = () => {
   return (
     <div >
@@ -12,7 +15,8 @@ const App = () => {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/riders" element={<RiderListPage />} />
         <Route path="/riders/active" element={<ActiveRiders />} />
-
+        <Route path="/rider-login" element={<RiderLogin />} />
+        <Route path="/rider-panel" element={<RiderPanel />} />
       </Routes>
     </div>
   );
