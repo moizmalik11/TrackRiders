@@ -8,8 +8,8 @@ export default {
     extend: {
       colors: {
         'navy-black': '#0a0f1e',
-        'electric-blue': '#3b82f6',
-        'cyan-glow': '#06b6d4',
+        'brand-red': '#ff4b4b',
+        'brand-gold': '#ffb400',
         'emerald-green': '#10b981',
       },
       animation: {
