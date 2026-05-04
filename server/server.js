@@ -45,22 +45,25 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Connect to MongoDB with improved error handling
+// Connect to MongoDB with improved error handling for Cloud Clusters
+console.log("📡 Attempting to connect to MongoDB...");
 mongoose.connect(config.MONGODB_URI)
     .then(() => {
-        console.log("✅ MongoDB connected successfully");
+        const dbHost = mongoose.connection.host;
+        console.log(`✅ MongoDB Connected Successfully!`);
+        console.log(`🌐 Cluster Host: ${dbHost}`);
+        
         // Start server only after successful database connection
         server.listen(config.PORT, () => {
-            console.log(`🚀 Server running on port ${config.PORT}`);
-            console.log('📝 API Documentation:');
-            console.log('   - POST /api/auth/register - Register new admin');
-            console.log('   - POST /api/auth/login - Login admin');
-            console.log('   - GET /api/auth/me - Get current user');
+            console.log(`🚀 TrackRiders Server running on port ${config.PORT}`);
+            console.log('--- API Ready ---');
         });
     })
     .catch(err => {
-        console.error("❌ MongoDB Connection Error:", err);
-        process.exit(1); // Exit if cannot connect to database
+        console.error("❌ MongoDB Connection Error:");
+        console.error(err.message);
+        console.log("\n💡 PRO-TIP: Check if your IP is whitelisted in MongoDB Atlas (Network Access) and your password in .env is correct.");
+        process.exit(1); 
     });
 
 // Socket.io
