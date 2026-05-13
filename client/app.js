@@ -10,6 +10,13 @@ const loginFormElement = document.getElementById('loginFormElement');
 const registerFormElement = document.getElementById('registerFormElement');
 const alertDiv = document.getElementById('alert');
 
+// Tab Switching
+loginTab.addEventListener('click', () => {
+    loginTab.classList.add('bg-gray-50');
+    registerTab.classList.remove('bg-gray-50');
+    loginForm.classList.remove('hidden');
+    registerForm.classList.add('hidden');
+});
 
 registerTab.addEventListener('click', () => {
     registerTab.classList.add('bg-gray-50');
