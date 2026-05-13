@@ -176,18 +176,26 @@ const MapMonitoringAnimation = () => {
       {/* --- Moving Rider Icon (Slower - 15s) --- */}
       <motion.div
         className="absolute w-12 h-12 z-20 flex items-center justify-center"
+        style={{ x: "-50%", y: "-50%" }}
         animate={{ 
           left: ["12.5%", "25%", "25%", "75%", "75%", "87.5%"],
           top: ["25%", "25%", "50%", "50%", "75%", "75%"],
-          rotate: [0, 0, 90, 90, 0, 0]
         }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
       >
         <div className="relative">
-          <div className="absolute inset-0 bg-orange-500 rounded-full blur-2xl opacity-40 scale-150 animate-pulse"></div>
-          <div className="w-9 h-9 bg-orange-500 rounded-2xl border-2 border-white shadow-xl flex items-center justify-center">
-            <Navigation className="w-5 h-5 text-white fill-white" />
-          </div>
+          {/* Icon Wrapper that rotates */}
+          <motion.div
+            animate={{ 
+              rotate: [0, 0, 90, 0, 90, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute inset-0 bg-orange-500 rounded-full blur-2xl opacity-40 scale-150 animate-pulse"></div>
+            <div className="w-9 h-9 bg-orange-500 rounded-2xl border-2 border-white shadow-xl flex items-center justify-center">
+              <Navigation className="w-5 h-5 text-white fill-white" />
+            </div>
+          </motion.div>
           
           {/* Live Rider Label */}
           <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 bg-white px-3 py-1.5 rounded-xl shadow-2xl border border-slate-100 text-[9px] font-black text-slate-900 whitespace-nowrap">
