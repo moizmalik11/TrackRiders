@@ -25,7 +25,9 @@ import {
   MapPin,
   Search,
   Plus,
-  Minus
+  Minus,
+  Github,
+  Twitter
 } from 'lucide-react';
 
 // --- Components ---
@@ -384,25 +386,73 @@ const LandingPage = () => {
       </section>
 
       {/* --- FOOTER --- */}
-      <footer className="py-20 px-6 border-t border-slate-100 bg-white">
+      <footer className="py-24 px-6 bg-slate-950 text-slate-400 border-t border-slate-800">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-12">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg flex items-center justify-center border border-white/10">
-                <img src="/vite2.png" alt="Logo" className="w-5 h-5 object-contain" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            {/* Brand Column */}
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center border border-white/10">
+                  <img src="/vite2.png" alt="Logo" className="w-6 h-6 object-contain" />
+                </div>
+                <span className="text-2xl font-bold tracking-tight text-white">TrackRiders</span>
               </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">TrackRiders</span>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                The world's most intuitive platform for real-time delivery management and fleet oversight.
+              </p>
+              <div className="flex gap-4">
+                <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
+                  <Globe size={18} />
+                </a>
+                <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
+                  <Github size={18} />
+                </a>
+                <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
+                  <Twitter size={18} />
+                </a>
+              </div>
             </div>
-            
-            <div className="flex flex-wrap justify-center gap-8 lg:gap-16 text-sm font-bold text-slate-500 uppercase tracking-widest">
-              <a href="#features" className="hover:text-brand-red transition-all">Features</a>
-              <a href="#how-it-works" className="hover:text-brand-red transition-all">Solutions</a>
-              <a href="#about" className="hover:text-brand-red transition-all">About</a>
-              <a href="#" className="hover:text-brand-red transition-all">Privacy</a>
+
+            {/* Product Links */}
+            <div>
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Product</h3>
+              <ul className="flex flex-col gap-4 text-sm">
+                <li><a href="#features" className="hover:text-brand-red transition-all">Features</a></li>
+                <li><a href="#how-it-works" className="hover:text-brand-red transition-all">Solutions</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Pricing</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Updates</a></li>
+              </ul>
             </div>
-            
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-              © 2026 TrackRiders Inc.
+
+            {/* Company Links */}
+            <div>
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Company</h3>
+              <ul className="flex flex-col gap-4 text-sm">
+                <li><a href="#about" className="hover:text-brand-red transition-all">About Us</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Careers</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Contact</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Blog</a></li>
+              </ul>
+            </div>
+
+            {/* Legal Links */}
+            <div>
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Legal</h3>
+              <ul className="flex flex-col gap-4 text-sm">
+                <li><a href="#" className="hover:text-brand-red transition-all">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-brand-red transition-all">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-slate-600">
+            <div className="font-bold uppercase tracking-widest text-[10px]">
+              © 2026 TrackRiders Inc. All rights reserved.
+            </div>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-brand-red transition-all">Status</a>
+              <a href="#" className="hover:text-brand-red transition-all">Sitemap</a>
             </div>
           </div>
         </div>
