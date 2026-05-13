@@ -20,56 +20,46 @@ const MapModal = ({ onClose, rider }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (!window.google || !mapRef.current) return;
+    if (!window.L || !mapRef.current) return;
 
-    // Initialize map with a clean, light style
-    mapInstance.current = new window.google.maps.Map(mapRef.current, {
-      center: coordinatesStream[0],
+    // Initialize Leaflet map
+    mapInstance.current = window.L.map(mapRef.current, {
+      center: [coordinatesStream[0].lat, coordinatesStream[0].lng],
       zoom: 15,
-      disableDefaultUI: true,
-      zoomControl: true,
-      styles: [
-        {
-          featureType: "all",
-          elementType: "geometry",
-          stylers: [{ color: "#f5f5f5" }]
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#e9e9e9" }]
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [{ color: "#ffffff" }]
-        }
-      ]
+      zoomControl: false,
+      attributionControl: false
     });
+
+    // Add OpenStreetMap tiles (Clean look)
+    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19
+    }).addTo(mapInstance.current);
 
     // Custom Icon for Rider
-    const riderIcon = {
-      path: "M20 21v-2a4 4 0 0 0-3-3.87m-7 0a4 4 0 0 0-3 3.87v2M12 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
-      fillColor: "#ff4b4b",
-      fillOpacity: 1,
-      strokeWeight: 2,
-      strokeColor: "#ffffff",
-      scale: 1.5,
-      anchor: new window.google.maps.Point(12, 12)
-    };
-
-    markerInstance.current = new window.google.maps.Marker({
-      position: coordinatesStream[0],
-      map: mapInstance.current,
-      title: rider.name,
-      icon: riderIcon
+    const riderIcon = window.L.divIcon({
+      className: 'custom-rider-icon',
+      html: `<div style="background-color: #ff4b4b; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3); animation: pulse 2s infinite;"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     });
+
+    markerInstance.current = window.L.marker(
+      [coordinatesStream[0].lat, coordinatesStream[0].lng], 
+      { icon: riderIcon }
+    ).addTo(mapInstance.current);
+
+    return () => {
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+      }
+    };
   }, [rider]);
 
   useEffect(() => {
     if (!markerInstance.current || !mapInstance.current) return;
-    markerInstance.current.setPosition(coordinatesStream[currentIndex]);
-    mapInstance.current.panTo(coordinatesStream[currentIndex]);
+    const pos = coordinatesStream[currentIndex];
+    markerInstance.current.setLatLng([pos.lat, pos.lng]);
+    mapInstance.current.panTo([pos.lat, pos.lng]);
   }, [currentIndex]);
 
   useEffect(() => {

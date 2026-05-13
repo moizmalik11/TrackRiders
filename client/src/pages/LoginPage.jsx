@@ -236,6 +236,26 @@ const LoginPage = () => {
                   </button>
                 </div>
 
+                <AnimatePresence>
+                  {isRegistering && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="relative overflow-hidden"
+                    >
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="w-full px-8 py-5 bg-white border border-slate-100 rounded-full text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-red/20 transition-all text-sm font-medium shadow-sm"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm Password"
+                        required
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 {!isRegistering && (
                   <div className="px-6 pt-1">
                     <button type="button" className="text-xs font-medium text-brand-red hover:underline tracking-tight">Forgot password?</button>
