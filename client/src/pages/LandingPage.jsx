@@ -291,7 +291,7 @@ const LandingPage = () => {
             >
               <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-10">
                 <Star size={12} className="text-brand-red fill-brand-red" />
-                Certified Delivery Tracking System
+                Real-Time Fleet Monitoring
               </div>
               
               <h1 className="text-5xl lg:text-[80px] font-bold tracking-tight leading-[1] mb-8 text-slate-900">
@@ -308,7 +308,7 @@ const LandingPage = () => {
                   Get Started <ArrowRight size={20} />
                 </Link>
                 <div className="flex items-center gap-3 text-slate-400 font-bold text-xs uppercase tracking-widest">
-                  <CheckCircle size={16} className="text-emerald-500" /> Trusted by 500+ Orgs
+                  <CheckCircle size={16} className="text-emerald-500" /> Trusted by Leading Organizations
                 </div>
               </div>
             </motion.div>
