@@ -181,7 +181,12 @@ const MapMonitoringAnimation = () => {
           left: ["12.5%", "25%", "25%", "75%", "75%", "87.5%"],
           top: ["25%", "25%", "50%", "50%", "75%", "75%"],
         }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        transition={{ 
+          duration: 15, 
+          repeat: Infinity, 
+          ease: "linear",
+          times: [0, 0.1111, 0.2778, 0.7222, 0.8889, 1]
+        }}
       >
         <div className="relative">
           {/* Icon Wrapper that rotates */}
@@ -189,7 +194,12 @@ const MapMonitoringAnimation = () => {
             animate={{ 
               rotate: [0, 0, 90, 0, 90, 0]
             }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            transition={{ 
+              duration: 15, 
+              repeat: Infinity, 
+              ease: "linear",
+              times: [0, 0.1111, 0.2778, 0.7222, 0.8889, 1]
+            }}
           >
             <div className="absolute inset-0 bg-orange-500 rounded-full blur-2xl opacity-40 scale-150 animate-pulse"></div>
             <div className="w-9 h-9 bg-orange-500 rounded-2xl border-2 border-white shadow-xl flex items-center justify-center">
@@ -212,7 +222,7 @@ const MapMonitoringAnimation = () => {
         </div>
       </div>
 
-      <div className="absolute top-8 left-8 flex flex-col gap-3 z-30">
+      <div className="absolute top-8 left-8 flex flex-row gap-3 z-30">
         <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-2xl flex items-center gap-3 backdrop-blur-sm">
           <div className="w-8 h-8 bg-emerald-500/20 rounded-xl flex items-center justify-center">
             <Signal className="w-4 h-4 text-emerald-500" />
