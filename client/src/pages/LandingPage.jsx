@@ -50,8 +50,8 @@ const Navbar = () => {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/90 backdrop-blur-xl border-b border-slate-200 py-3' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center shadow-lg shadow-brand-red/20 group-hover:scale-110 transition-transform">
-            <img src="/vite2.png" alt="Logo" className="w-6 h-6" />
+          <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform border border-white/10">
+            <img src="/vite2.png" alt="Logo" className="w-6 h-6 object-contain" />
           </div>
           <span className="text-2xl font-bold tracking-tight text-slate-900">
             TrackRiders
@@ -258,9 +258,9 @@ const FeatureCard = ({ icon: Icon, title, description, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      className="bg-white p-8 lg:p-12 rounded-[32px] border border-slate-100 hover:border-brand-red/20 transition-all group shadow-sm hover:shadow-xl"
+      className="bg-white p-8 lg:p-12 rounded-[32px] border border-slate-100 hover:border-brand-red/20 transition-all group shadow-sm hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
     >
-      <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 group-hover:bg-brand-red group-hover:text-white transition-all duration-500">
+      <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 group-hover:bg-brand-red group-hover:text-white transition-all duration-500 group-hover:scale-110">
         <Icon size={24} />
       </div>
       <h3 className="text-xl font-bold text-slate-900 mb-4 tracking-tight">{title}</h3>
@@ -304,7 +304,7 @@ const LandingPage = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center gap-6">
-                <Link to="/login" className="w-full sm:w-auto bg-slate-900 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand-red transition-all shadow-2xl shadow-slate-900/10 active:scale-95 flex items-center justify-center gap-3">
+                <Link to="/login" className="w-full sm:w-auto bg-slate-900 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand-red hover:scale-105 transition-all shadow-2xl shadow-slate-900/10 active:scale-95 flex items-center justify-center gap-3">
                   Get Started <ArrowRight size={20} />
                 </Link>
                 <div className="flex items-center gap-3 text-slate-400 font-bold text-xs uppercase tracking-widest">
@@ -388,8 +388,8 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-12">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-brand-red rounded-lg flex items-center justify-center">
-                <img src="/vite2.png" alt="Logo" className="w-5 h-5" />
+              <div className="w-8 h-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg flex items-center justify-center border border-white/10">
+                <img src="/vite2.png" alt="Logo" className="w-5 h-5 object-contain" />
               </div>
               <span className="text-xl font-bold tracking-tight text-slate-900">TrackRiders</span>
             </div>
