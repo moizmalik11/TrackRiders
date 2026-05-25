@@ -25,9 +25,7 @@ import {
   MapPin,
   Search,
   Plus,
-  Minus,
-  Github,
-  Twitter
+  Minus
 } from 'lucide-react';
 
 // --- Components ---
@@ -405,10 +403,10 @@ const LandingPage = () => {
                   <Globe size={18} />
                 </a>
                 <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
-                  <Github size={18} />
+                  <Globe size={18} />
                 </a>
                 <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
-                  <Twitter size={18} />
+                  <Globe size={18} />
                 </a>
               </div>
             </div>
