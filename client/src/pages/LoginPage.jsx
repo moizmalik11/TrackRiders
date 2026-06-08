@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Mail, ArrowLeft, Building, User, MapPin, ArrowRight, Eye, EyeOff, Smartphone, LogIn, UserPlus } from "lucide-react";
+import { Lock, Mail, ArrowLeft, Building, User, MapPin, ArrowRight, Eye, EyeOff, Smartphone, LogIn, UserPlus, Loader2 } from "lucide-react";
+import { useRiders } from "../context/RiderContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +14,8 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { fetchRiders } = useRiders();
 
   const navigate = useNavigate();
 
@@ -27,6 +30,7 @@ const LoginPage = () => {
     }
 
     try {
+      setIsLoading(true);
       const response = await fetch('http://localhost:5001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,12 +41,15 @@ const LoginPage = () => {
       if (response.ok) {
         setError("");
         localStorage.setItem('token', data.token);
+        await fetchRiders(); // Fetch latest data before navigating
         navigate("/admin");
       } else {
         setError(data.message || "Invalid credentials.");
       }
     } catch (err) {
       setError("An error occurred during login.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -264,10 +271,17 @@ const LoginPage = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-brand-red to-orange-500 text-white py-5 rounded-full font-medium text-sm hover:shadow-xl hover:shadow-brand-red/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 mt-6 shadow-lg shadow-brand-red/10"
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-brand-red to-orange-500 text-white py-5 rounded-full font-medium text-sm hover:shadow-xl hover:shadow-brand-red/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 mt-6 shadow-lg shadow-brand-red/10 disabled:opacity-70"
                 >
-                  <LogIn className="w-4 h-4" />
-                  <span>{isRegistering ? "Register Organization" : "Sign In"}</span>
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <LogIn className="w-4 h-4" />
+                      <span>{isRegistering ? "Register Organization" : "Sign In"}</span>
+                    </>
+                  )}
                 </button>
               </form>
             </div>
