@@ -1,460 +1,473 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Map as MapIcon, 
-  Package, 
-  RefreshCcw, 
-  Users, 
-  History, 
-  Lock, 
-  ChevronRight, 
-  Code, 
-  ArrowRight,
-  Menu,
-  X,
-  CheckCircle,
-  Clock,
-  Shield,
-  Smartphone,
-  Globe,
-  Star,
-  Activity,
-  Navigation,
-  Signal,
-  MapPin,
-  Search,
-  Plus,
-  Minus
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronRight, Search, Sparkles, Navigation, MapPin, Map, Package, Users, Shield, Server, ArrowRight, Menu } from 'lucide-react';
 
-// --- Components ---
+// --- Shared Primitives ---
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const LogoMark = ({ className = "w-8 h-8 text-[#00d2ff]" }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polygon points="3 11 22 2 13 21 11 13 3 11" />
+  </svg>
+);
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+const PrimaryButton = ({ label = "Admin Login", to = "/login", className = "" }) => (
+  <Link to={to} className={`group inline-flex items-center justify-center gap-2 rounded-full bg-white text-black font-medium text-sm px-5 py-3 transition-all hover:bg-white/90 active:scale-[0.98] ${className}`}>
+    {label}
+    <ChevronRight size={16} className="transition-transform group-hover:translate-x-[1px]" />
+  </Link>
+);
 
-  const navLinks = [
-    { name: 'Features', href: '#features' },
-    { name: 'Solutions', href: '#how-it-works' },
-    { name: 'About', href: '#about' },
-  ];
-
-  return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/90 backdrop-blur-xl border-b border-slate-200 py-3' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform border border-white/10">
-            <img src="/vite2.png" alt="Logo" className="w-6 h-6 object-contain" />
-          </div>
-          <span className="text-2xl font-bold tracking-tight text-slate-900">
-            TrackRiders
-          </span>
-        </Link>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a 
-              key={link.name} 
-              href={link.href} 
-              className="text-slate-500 hover:text-brand-red transition-all font-medium text-sm"
-            >
-              {link.name}
-            </a>
-          ))}
-          <div className="flex items-center gap-4 pl-6 border-l border-slate-200 ml-2">
-            <Link to="/rider-login" className="text-slate-900 font-bold text-xs uppercase tracking-widest hover:text-brand-red transition-colors">
-              Rider Portal
-            </Link>
-            <Link to="/login" className="bg-slate-900 px-6 py-3 rounded-full text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-red transition-all shadow-xl shadow-slate-900/10 active:scale-95">
-              Get Started
-            </Link>
-          </div>
-        </div>
-
-        {/* Mobile Toggle */}
-        <button className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-900" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-2xl overflow-hidden"
-          >
-            <div className="flex flex-col p-8 gap-6">
-              {navLinks.map((link) => (
-                <a key={link.name} href={link.href} className="text-slate-900 font-bold text-lg" onClick={() => setMobileMenuOpen(false)}>
-                  {link.name}
-                </a>
-              ))}
-              <hr className="border-slate-100" />
-              <div className="flex flex-col gap-4">
-                <Link to="/rider-login" className="w-full py-4 rounded-2xl font-bold text-center text-slate-900 border border-slate-200" onClick={() => setMobileMenuOpen(false)}>Rider Portal</Link>
-                <Link to="/login" className="w-full bg-brand-red py-4 rounded-2xl font-bold text-center text-white shadow-xl shadow-brand-red/20" onClick={() => setMobileMenuOpen(false)}>Admin Access</Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
-  );
-};
-
-const MapMonitoringAnimation = () => {
-  const routePath = "M 100 150 L 200 150 L 200 300 L 600 300 L 600 450 L 700 450";
-
-  return (
-    <div className="relative w-full aspect-square lg:aspect-[4/3] bg-slate-950 rounded-[48px] overflow-hidden shadow-2xl border border-white/5 group">
-      
-      {/* --- Stylized City Map Background --- */}
-      <div className="absolute inset-0 opacity-20">
-        <svg width="100%" height="100%" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 150 H800 M0 450 H800 M200 0 V600 M600 0 V600" stroke="#334155" strokeWidth="40" strokeLinecap="round" />
-          <path d="M400 0 V600 M0 300 H800" stroke="#334155" strokeWidth="20" strokeLinecap="round" opacity="0.5" />
-          <rect x="230" y="180" width="140" height="90" rx="12" fill="#1e293b" />
-          <rect x="430" y="180" width="140" height="90" rx="12" fill="#1e293b" />
-          <rect x="230" y="330" width="140" height="90" rx="12" fill="#1e293b" />
-          <rect x="430" y="330" width="140" height="90" rx="12" fill="#1e293b" />
-        </svg>
-      </div>
-
-      {/* --- Destination Marker --- */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="absolute left-[87.5%] top-[75%] -translate-x-1/2 -translate-y-[80%] z-30 flex flex-col items-center"
-      >
-        <div className="bg-brand-red text-white p-2 rounded-xl shadow-2xl border-2 border-white/20 animate-bounce">
-          <MapPin size={16} fill="currentColor" />
-        </div>
-        <div className="mt-2 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[8px] font-black text-white uppercase tracking-widest border border-white/5">
-           Delivery Point
-        </div>
-      </motion.div>
-
-      {/* --- Tracking Path --- */}
-      <svg className="absolute inset-0 w-full h-full z-10" viewBox="0 0 800 600">
-        {/* Base Static Path */}
-        <path
-          d={routePath}
-          fill="transparent"
-          stroke="#334155"
-          strokeWidth="6"
-          strokeLinecap="round"
-          opacity="0.3"
-        />
-        
-        {/* Orange Overlay Path (Progress) */}
-        <motion.path
-          d={routePath}
-          fill="transparent"
-          stroke="#f97316" // Orange-500
-          strokeWidth="6"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        />
-
-        {/* Start Point */}
-        <circle cx="100" cy="150" r="5" fill="#10b981" />
-      </svg>
-
-      {/* --- Moving Rider Icon (Slower - 15s) --- */}
-      <motion.div
-        className="absolute w-12 h-12 z-20 flex items-center justify-center"
-        style={{ x: "-50%", y: "-50%" }}
-        animate={{ 
-          left: ["12.5%", "25%", "25%", "75%", "75%", "87.5%"],
-          top: ["25%", "25%", "50%", "50%", "75%", "75%"],
-        }}
-        transition={{ 
-          duration: 15, 
-          repeat: Infinity, 
-          ease: "linear",
-          times: [0, 0.1111, 0.2778, 0.7222, 0.8889, 1]
-        }}
-      >
-        <div className="relative">
-          {/* Icon Wrapper that rotates */}
-          <motion.div
-            animate={{ 
-              rotate: [0, 0, 90, 0, 90, 0]
-            }}
-            transition={{ 
-              duration: 15, 
-              repeat: Infinity, 
-              ease: "linear",
-              times: [0, 0.1111, 0.2778, 0.7222, 0.8889, 1]
-            }}
-          >
-            <div className="absolute inset-0 bg-orange-500 rounded-full blur-2xl opacity-40 scale-150 animate-pulse"></div>
-            <div className="w-9 h-9 bg-orange-500 rounded-2xl border-2 border-white shadow-xl flex items-center justify-center">
-              <Navigation className="w-5 h-5 text-white fill-white" />
-            </div>
-          </motion.div>
-          
-          {/* Live Rider Label */}
-          <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 bg-white px-3 py-1.5 rounded-xl shadow-2xl border border-slate-100 text-[9px] font-black text-slate-900 whitespace-nowrap">
-             TR-204 • Moving
-          </div>
-        </div>
-      </motion.div>
-
-      {/* --- HUD Monitoring Overlays --- */}
-      <div className="absolute top-8 right-8 flex flex-col items-end gap-2 z-30">
-        <div className="bg-slate-900/60 backdrop-blur-md border border-white/5 p-2 rounded-xl flex items-center gap-2">
-           <Search size={12} className="text-slate-500" />
-           <div className="w-12 h-1 bg-white/10 rounded-full"></div>
-        </div>
-      </div>
-
-      <div className="absolute top-8 left-8 flex flex-row gap-3 z-30">
-        <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-2xl flex items-center gap-3 backdrop-blur-sm">
-          <div className="w-8 h-8 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-            <Signal className="w-4 h-4 text-emerald-500" />
-          </div>
-          <div>
-            <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Signal</div>
-            <div className="text-[10px] font-bold text-emerald-500 tracking-tight leading-none">EXCELLENT</div>
-          </div>
-        </div>
-
-        <button className="bg-slate-900/80 hover:bg-orange-500 transition-all border border-white/5 p-3 rounded-2xl backdrop-blur-md flex items-center gap-3 group">
-           <Clock size={16} className="text-orange-500 group-hover:text-white transition-colors" />
-           <div className="text-left">
-              <div className="text-[8px] font-bold text-slate-500 group-hover:text-white/70 uppercase tracking-widest leading-none mb-1">Estimated ETA</div>
-              <div className="text-sm font-bold text-white tracking-tight leading-none">08:15 <span className="text-[9px] opacity-40 ml-0.5">MIN</span></div>
-           </div>
-        </button>
-      </div>
-
-      {/* Minimal Bottom Label */}
-      <div className="absolute bottom-8 left-8 flex items-center gap-2 px-4 py-2 bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-full z-30">
-        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Monitoring Node #88</span>
-      </div>
+const SectionEyebrow = ({ label, tag }) => (
+  <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
+      <span className="w-1.5 h-1.5 rounded-full bg-white" />
+      <span className="text-sm font-medium">{label}</span>
     </div>
-  );
-};
-
-const FeatureCard = ({ icon: Icon, title, description, index }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="bg-white p-8 lg:p-12 rounded-[32px] border border-slate-100 hover:border-brand-red/20 transition-all group shadow-sm hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
-    >
-      <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 group-hover:bg-brand-red group-hover:text-white transition-all duration-500 group-hover:scale-110">
-        <Icon size={24} />
-      </div>
-      <h3 className="text-xl font-bold text-slate-900 mb-4 tracking-tight">{title}</h3>
-      <p className="text-slate-500 text-sm leading-relaxed font-medium">
-        {description}
-      </p>
-    </motion.div>
-  );
-};
+    {tag && (
+      <span className="px-2 py-0.5 rounded-full border border-white/10 text-white/50 text-xs">
+        {tag}
+      </span>
+    )}
+  </div>
+);
 
 const LandingPage = () => {
+  const gradientStyle = {
+    backgroundImage: 'linear-gradient(to right, #091020 0%, #0B2551 12.5%, #A4F4FD 32.5%, #00d2ff 50%, #0B2551 67.5%, #091020 87.5%, #091020 100%)',
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    backgroundClip: 'text',
+    color: 'transparent',
+    WebkitTextFillColor: 'transparent',
+    filter: 'url(#c3-noise)'
+  };
+
   return (
-    <div className="bg-white text-slate-900 min-h-screen selection:bg-brand-red/10 overflow-x-hidden font-sans">
-      <Navbar />
+    <div className="relative min-h-screen overflow-x-hidden bg-[#0c0c0c] text-white">
+      {/* Global Background Video */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <video 
+          autoPlay loop muted playsInline
+          className="w-full h-full object-cover pointer-events-none opacity-40 mix-blend-screen"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4" 
+        />
+      </div>
 
-      {/* --- HERO SECTION --- */}
-      <section className="relative min-h-screen flex items-center pt-24 pb-20 px-6 lg:px-12 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-red/5 rounded-full blur-[140px] -z-10 translate-x-1/4 -translate-y-1/4"></div>
+      {/* Guide Lines */}
+      <div className="hidden md:block pointer-events-none fixed inset-y-0 left-1/2 -translate-x-[calc(50%+36rem)] w-px bg-white/10 z-[5]" />
+      <div className="hidden md:block pointer-events-none fixed inset-y-0 left-1/2 translate-x-[calc(-50%+36rem)] w-px bg-white/10 z-[5]" />
 
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center lg:text-left flex flex-col items-center lg:items-start"
-            >
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-10">
-                <Star size={12} className="text-brand-red fill-brand-red" />
-                Real-Time Fleet Monitoring
-              </div>
-              
-              <h1 className="text-5xl lg:text-[80px] font-bold tracking-tight leading-[1] mb-8 text-slate-900">
-                Track Every Rider. <br />
-                <span className="text-brand-red">Deliver Results.</span>
-              </h1>
-              
-              <p className="text-lg lg:text-xl text-slate-500 max-w-xl mb-12 leading-relaxed font-medium">
-                The world's most intuitive platform for real-time delivery management and fleet oversight.
-              </p>
+      {/* Global SVG Filters */}
+      <svg width="0" height="0" className="absolute">
+        <filter id="c3-noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0" />
+          <feComposite in2="SourceGraphic" operator="in" result="noise" />
+          <feBlend in="SourceGraphic" in2="noise" mode="multiply" />
+        </filter>
+      </svg>
 
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <Link to="/login" className="w-full sm:w-auto bg-slate-900 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand-red hover:scale-105 transition-all shadow-2xl shadow-slate-900/10 active:scale-95 flex items-center justify-center gap-3">
-                  Get Started <ArrowRight size={20} />
-                </Link>
-                <div className="flex items-center gap-3 text-slate-400 font-bold text-xs uppercase tracking-widest">
-                  <CheckCircle size={16} className="text-emerald-500" /> Trusted by Leading Organizations
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="relative w-full"
-            >
-              <MapMonitoringAnimation />
-              <div className="absolute -inset-10 bg-brand-red/10 rounded-full blur-[100px] -z-10"></div>
-            </motion.div>
-
+      <div className="relative z-10">
+        {/* Section 1 — Navbar */}
+        <motion.nav 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between"
+        >
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <LogoMark />
+            <span className="font-bold text-lg tracking-tight">TrackRiders</span>
           </div>
-        </div>
-      </section>
-
-      {/* --- STATS SECTION --- */}
-      <section className="py-24 bg-slate-50/50 border-y border-slate-100 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200">
-             <div className="py-8 md:py-0">
-                <div className="text-4xl lg:text-5xl font-bold text-slate-900 mb-2">0ms</div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Real-time Sync</div>
-             </div>
-             <div className="py-8 md:py-0">
-                <div className="text-4xl lg:text-5xl font-bold text-slate-900 mb-2">100%</div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Tracking Accuracy</div>
-             </div>
-             <div className="py-8 md:py-0">
-                <div className="text-4xl lg:text-5xl font-bold text-slate-900 mb-2">5.0</div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">User Satisfaction</div>
-             </div>
+          <div className="hidden md:flex gap-8">
+            <a href="#features" className="text-white/70 text-sm font-medium hover:text-white transition-colors">Features</a>
+            <a href="#stack" className="text-white/70 text-sm font-medium hover:text-white transition-colors">Tech Stack</a>
+            <Link to="/rider-login" className="text-white/70 text-sm font-medium hover:text-white transition-colors">Rider Access</Link>
+            <Link to="/login" className="text-white/70 text-sm font-medium hover:text-white transition-colors">Admin Access</Link>
           </div>
-        </div>
-      </section>
-
-      {/* --- FEATURES --- */}
-      <section id="features" className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-24">
-            <h2 className="text-xs font-bold text-brand-red uppercase tracking-[0.3em] mb-4">Core Technology</h2>
-            <h3 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-8">Everything you need <br /> to lead the field.</h3>
-            <p className="text-slate-500 text-lg font-medium leading-relaxed">Modern tools for modern logistics. Built for speed, accuracy, and reliability.</p>
+          <div className="hidden md:block">
+            <PrimaryButton label="Admin Dashboard" to="/login" />
           </div>
+          <button className="md:hidden w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center">
+            <Menu size={18} />
+          </button>
+        </motion.nav>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            <FeatureCard icon={MapIcon} title="Live Map GPS" description="See your entire fleet in motion. High-precision Leaflet maps update every second." index={0} />
-            <FeatureCard icon={Package} title="Smart Assignment" description="Intelligently route orders to the nearest free rider with one single click." index={1} />
-            <FeatureCard icon={RefreshCcw} title="Instant Sync" description="Powered by Socket.io for no-refresh data flow across all admin and rider panels." index={2} />
-            <FeatureCard icon={Users} title="Fleet Oversight" description="Manage rider status, performance, and schedules from a clean central hub." index={3} />
-            <FeatureCard icon={History} title="Order Ledger" description="Full historical logs of every delivery, complete with timestamps and receiver info." index={4} />
-            <FeatureCard icon={Lock} title="Secure Tunnel" description="Enterprise-grade JWT and Bcrypt protection for all your organizational data." index={5} />
-          </div>
-        </div>
-      </section>
+        {/* Section 2 — Hero */}
+        <section className="pt-16 md:pt-28 pb-20 text-center flex flex-col items-center px-6">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-7xl font-semibold tracking-tight leading-[0.9]"
+          >
+            <span className="text-white block">Your fleet.</span>
+            <span className="block animate-shiny mt-2" style={gradientStyle}>Synchronized</span>
+          </motion.h1>
 
-      {/* --- CTA SECTION --- */}
-      <section className="py-32 px-6">
-        <div className="max-w-5xl mx-auto bg-slate-900 rounded-[48px] p-12 lg:p-24 text-center relative overflow-hidden">
-          {/* Accent Glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/20 rounded-full blur-[80px]"></div>
-          
-          <div className="relative z-10">
-            <h2 className="text-4xl lg:text-6xl font-bold text-white mb-8 leading-tight">Ready to scale <br /> your operations?</h2>
-            <p className="text-slate-400 text-lg lg:text-xl mb-12 max-w-2xl mx-auto font-medium">Join the logistics revolution. Start tracking with TrackRiders today.</p>
-            <Link to="/login" className="bg-white text-slate-900 px-12 py-5 rounded-full font-bold text-lg hover:bg-brand-red hover:text-white transition-all shadow-xl active:scale-95 inline-flex items-center gap-3">
-              Get Started Now <ArrowRight size={20} />
+          <motion.p 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+            className="mt-8 text-white/60 max-w-md text-base leading-[1.5]"
+          >
+            TrackRiders is a high-performance, real-time dispatch dashboard and rider telemetry terminal built for logistics and service fleets.
+          </motion.p>
+
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
+            className="mt-8 flex flex-col items-center gap-4 sm:flex-row"
+          >
+            <PrimaryButton label="Admin Portal" to="/login" />
+            <Link to="/rider-login" className="group inline-flex items-center justify-center gap-2 rounded-full bg-white/10 text-white font-medium text-sm px-5 py-3 transition-all hover:bg-white/20 active:scale-[0.98]">
+              Rider Terminal
             </Link>
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </section>
 
-      {/* --- FOOTER --- */}
-      <footer className="py-24 px-6 bg-slate-950 text-slate-400 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-            {/* Brand Column */}
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center border border-white/10">
-                  <img src="/vite2.png" alt="Logo" className="w-6 h-6 object-contain" />
+        {/* Section 3 — Mockup window strip */}
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
+          className="w-full h-10 bg-black/40 backdrop-blur-md border-y border-white/10"
+        >
+          <div className="max-w-6xl mx-auto px-6 h-full flex items-center justify-between text-xs font-medium">
+            <div className="flex items-center gap-4">
+              <LogoMark className="w-3.5 h-3.5 text-[#00d2ff]" />
+              <span className="font-bold text-white">TrackRiders</span>
+              {['Live Map','Dispatch','Riders','Logs','Settings'].map((item, i) => (
+                <span key={item} className={`text-white/80 ${i > 2 ? 'hidden sm:inline' : ''} ${i > 3 ? 'md:hidden lg:inline' : ''}`}>
+                  {item}
+                </span>
+              ))}
+            </div>
+            <div className="flex items-center gap-3 text-white/80">
+              <div className="flex items-center gap-2 text-[#28c840]">
+                <span className="w-2 h-2 rounded-full bg-[#28c840] animate-pulse" />
+                Live Server
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Section 4 — Dashboard mockup */}
+        <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.8 }}
+            className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0e1014]/90 backdrop-blur-2xl shadow-2xl"
+          >
+            {/* Title bar */}
+            <div className="h-10 border-b border-white/10 flex items-center px-4 relative bg-white/[0.02]">
+              <div className="flex gap-2 z-10">
+                <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+                <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+                <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center text-xs text-white/50 font-medium">
+                Command Center
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="grid grid-cols-1 md:grid-cols-12 h-[600px] md:h-[520px]">
+              
+              {/* Sidebar */}
+              <div className="hidden md:block col-span-3 border-r border-white/10 bg-black/30 p-4 overflow-y-auto">
+                <button className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#00d2ff] text-black text-xs font-semibold px-3 py-2.5 mb-6 hover:bg-[#A4F4FD] transition-colors">
+                  <Package size={14} /> Dispatch Order
+                </button>
+                <div className="space-y-1 mb-8">
+                  <div className="flex items-center justify-between px-3 py-2 bg-white/10 text-white rounded-md text-sm font-medium">
+                    <span className="flex items-center gap-2"><Map size={14} /> Live Map</span>
+                  </div>
+                  {[{icon: Users, label: 'Active Riders', count: 12}, {icon: Users, label: 'All Riders', count: 45}, {icon: Server, label: 'Logs'}].map(item => (
+                    <div key={item.label} className="flex items-center justify-between px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white rounded-md text-sm transition-colors cursor-pointer">
+                      <span className="flex items-center gap-2"><item.icon size={14} /> {item.label}</span>
+                      {item.count && <span className="text-xs">{item.count}</span>}
+                    </div>
+                  ))}
                 </div>
-                <span className="text-2xl font-bold tracking-tight text-white">TrackRiders</span>
+                <div>
+                  <h4 className="px-3 text-[10px] uppercase tracking-widest text-white/40 font-semibold mb-3">Zones</h4>
+                  {[
+                    {label: 'Downtown', color: '#00d2ff'},
+                    {label: 'North Sector', color: '#A4F4FD'},
+                    {label: 'East Side', color: '#f59e0b'},
+                    {label: 'West End', color: '#10b981'}
+                  ].map(label => (
+                    <div key={label.label} className="flex items-center gap-3 px-3 py-1.5 text-white/60 text-sm hover:text-white cursor-pointer">
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: label.color }} /> {label.label}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                The world's most intuitive platform for real-time delivery management and fleet oversight.
+
+              {/* Rider List */}
+              <div className="col-span-12 md:col-span-4 border-r border-white/10 overflow-y-auto bg-black/10">
+                <div className="p-3 border-b border-white/10 sticky top-0 bg-[#0e1014]/90 backdrop-blur-md z-10">
+                  <div className="bg-white/5 border border-white/10 rounded-md px-3 py-2 flex items-center gap-2">
+                    <Search size={14} className="text-white/40" />
+                    <input type="text" placeholder="Search riders" className="bg-transparent border-none outline-none text-sm text-white placeholder-white/40 w-full" />
+                  </div>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {[
+                    { name: 'John Doe', status: 'On Delivery', location: 'Downtown', time: 'Active now', active: true },
+                    { name: 'Alice Smith', status: 'Available', location: 'North Sector', time: 'Active now' },
+                    { name: 'Michael Lee', status: 'On Delivery', location: 'West End', time: 'Active now' },
+                    { name: 'Sarah Connor', status: 'Offline', location: '-', time: '2 hours ago' },
+                  ].map((rider, i) => (
+                    <div key={i} className={`p-4 cursor-pointer transition-colors ${rider.active ? 'bg-white/5' : 'hover:bg-white/[0.02]'}`}>
+                      <div className="flex justify-between items-baseline mb-1">
+                        <span className={`text-sm ${rider.active ? 'text-white font-semibold' : 'text-white/70'}`}>{rider.name}</span>
+                        <span className={`text-xs ${rider.status === 'Available' ? 'text-[#28c840]' : rider.status === 'Offline' ? 'text-white/40' : 'text-[#f59e0b]'}`}>{rider.status}</span>
+                      </div>
+                      <div className="text-xs text-white/50">{rider.location}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Map Placeholder */}
+              <div className="hidden md:flex flex-col col-span-5 bg-black/20 relative">
+                <div className="absolute inset-0 bg-[#0a0a0a] overflow-hidden">
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
+                  
+                  {/* Animated Route Map */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" fill="none">
+                    {/* Dotted Background Route */}
+                    <path 
+                      d="M50 150 L100 100 L200 120 L250 80 L350 180" 
+                      stroke="#00d2ff" 
+                      strokeWidth="2" 
+                      strokeDasharray="4,4" 
+                      className="opacity-30" 
+                    />
+                    
+                    {/* Solid Animated Trailing Route */}
+                    <path 
+                      d="M50 150 L100 100 L200 120 L250 80 L350 180" 
+                      stroke="#00d2ff" 
+                      strokeWidth="3"
+                      fill="transparent"
+                      pathLength="100"
+                      strokeDasharray="100"
+                      strokeDashoffset="100"
+                    >
+                      <animate 
+                        attributeName="stroke-dashoffset" 
+                        from="100" 
+                        to="0" 
+                        dur="15s" 
+                        repeatCount="indefinite" 
+                      />
+                    </path>
+
+                    {/* Destination Pin */}
+                    <foreignObject x="338" y="156" width="24" height="24">
+                      <div className="text-[#ff5f57] animate-pulse">
+                        <MapPin size={24} fill="currentColor" />
+                      </div>
+                    </foreignObject>
+
+                    {/* Animated Rider Arrow */}
+                    <g fill="#28c840" style={{ filter: 'drop-shadow(0 0 8px rgba(40,200,64,0.6))' }}>
+                      <polygon points="-12,-6 4,0 -12,6 -8,0" />
+                      <animateMotion 
+                        dur="15s" 
+                        repeatCount="indefinite" 
+                        path="M50 150 L100 100 L200 120 L250 80 L350 180"
+                        rotate="auto"
+                      />
+                    </g>
+                  </svg>
+                </div>
+                
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="liquid-glass rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-sm font-medium text-white">John Doe</div>
+                      <span className="px-2 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/70">ORD-9421</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2 text-sm text-[#A4F4FD]">
+                      <Navigation size={14} className="animate-pulse" /> ETA: 12 mins
+                    </div>
+                    <p className="text-sm text-white/60 leading-relaxed truncate">
+                      En route to 123 Logistics Ave.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Section - Feature Cards */}
+        <section className="max-w-6xl mx-auto px-6 py-20 md:py-28" id="features">
+          <div className="text-center mb-16 flex flex-col items-center">
+            <SectionEyebrow label="Platform" tag="Core Features" />
+            <h2 className="mt-5 text-3xl md:text-5xl font-semibold tracking-tight leading-[1.02]">
+              Everything you need to <br/> scale your delivery fleet.
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Map, title: "Satellite Geo-Tracking", desc: "Live-rendered interactive map views showing real-time coordinates of riders as they move through cities." },
+              { icon: Package, title: "Dynamic Order Dispatch", desc: "Instantly dispatch orders to active riders complete with ID, product, delivery address, and receiver info." },
+              { icon: Users, title: "Live Command Center", desc: "Track available, active, and on-leave fleets with visual counters and real-time operational metrics." },
+              { icon: Navigation, title: "Rider Shift Terminal", desc: "A dedicated workspace for riders to claim shifts, view current assignments, trigger GPS pings, and complete orders." },
+              { icon: Server, title: "WebSocket Telemetry", desc: "Low-latency persistent connection to receive instant position broadcasts and order status updates." },
+              { icon: Shield, title: "Secure Operations", desc: "Multi-level JWT authentication, encrypted session controls, and secure data handling for peace of mind." }
+            ].map((feature, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true, margin: "-50px" }} 
+                transition={{ duration: 0.6, delay: i * 0.1 }} 
+                className="liquid-glass rounded-2xl p-8 hover:bg-white/5 transition-colors group cursor-default"
+              >
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-[#00d2ff] mb-6 group-hover:scale-110 transition-transform">
+                  <feature.icon size={24} />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+                <p className="text-sm text-white/60 leading-relaxed">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 5 — FeatureTriage */}
+        <section className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+              <SectionEyebrow label="Operations" tag="Real-Time" />
+              <h2 className="mt-5 text-3xl md:text-5xl font-semibold tracking-tight leading-[1.02]">
+                Satellite precision. <br/> Instant dispatch.
+              </h2>
+              <p className="mt-6 text-white/60 text-base leading-[1.6] max-w-md">
+                TrackRiders uses WebSockets to maintain a persistent connection with every rider. See their exact coordinates, send orders instantly, and optimize routes without refreshing.
               </p>
-              <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
-                  <Globe size={18} />
-                </a>
-                <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
-                  <Globe size={18} />
-                </a>
-                <a href="#" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-brand-red hover:text-white transition-all border border-slate-800">
-                  <Globe size={18} />
-                </a>
+              <div className="mt-8 flex flex-wrap gap-2">
+                {['Live telemetry', 'Socket.io powered', 'Geospatial queries', 'JWT Secured'].map(chip => (
+                  <span key={chip} className="text-xs text-white/70 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03]">
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+            
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="liquid-glass rounded-2xl p-5">
+              <div className="text-sm font-medium text-white/80 mb-5 pl-1">Live Metrics</div>
+              <div className="space-y-3">
+                {[
+                  { title: 'Active Riders', count: 12, color: '#28c840', desc: 'Currently connected' },
+                  { title: 'Deliveries Today', count: 142, color: '#00d2ff', desc: 'Completed orders' },
+                  { title: 'Server Pings', count: '1.2k', color: '#f59e0b', desc: 'Location updates / min' }
+                ].map(stat => (
+                  <div key={stat.title} className="liquid-glass rounded-lg p-3 px-4 flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold text-white">{stat.title}</div>
+                      <div className="text-xs text-white/40 mt-1">{stat.desc}</div>
+                    </div>
+                    <div className="text-lg font-semibold" style={{ color: stat.color }}>{stat.count}</div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Section 6 — Tech Stack */}
+        <section className="max-w-6xl mx-auto px-6 py-16 md:py-20" id="stack">
+          <div className="text-center text-xs uppercase tracking-widest text-white/40 font-semibold">
+            Powered by an enterprise-grade stack
+          </div>
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6 text-center">
+            {['React', 'Node.js', 'MongoDB', 'Socket.io', 'Tailwind CSS', 'Leaflet'].map((tech, i) => (
+              <motion.div 
+                key={tech} 
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="text-sm font-semibold tracking-tight text-white/50 hover:text-white transition-colors cursor-pointer py-2"
+              >
+                {tech}
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 7 — FinalCTA */}
+        <section className="max-w-6xl mx-auto px-6 py-20 md:py-32">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+            className="liquid-glass relative overflow-hidden rounded-3xl px-8 py-16 md:py-24 text-center"
+          >
+            <div className="absolute inset-0 pointer-events-none opacity-30" style={{ background: 'radial-gradient(600px circle at 50% 0%, rgba(255,255,255,0.15), transparent 70%)' }}></div>
+            
+            <div className="relative z-10">
+              <h2 className="text-4xl md:text-6xl font-semibold tracking-tight leading-[1.02] text-white">
+                Ready to take <br /> control?
+              </h2>
+              <p className="mt-6 text-white/60 max-w-md mx-auto text-sm leading-[1.6]">
+                Join the operations revolution. Start managing your fleet with TrackRiders today.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <PrimaryButton label="Admin Login" to="/login" />
+                <Link to="/rider-login" className="rounded-full border border-white/15 text-white text-sm font-medium px-5 py-3 hover:bg-white/5 transition-colors flex items-center gap-2">
+                  Rider Login <ArrowRight size={16} />
+                </Link>
               </div>
             </div>
+          </motion.div>
+        </section>
 
-            {/* Product Links */}
+        {/* Footer */}
+        <footer className="border-t border-white/10 py-12 mt-12">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 mb-4">
+                <LogoMark className="w-5 h-5 text-[#00d2ff]" />
+                <span className="font-bold text-white text-lg tracking-tight">TrackRiders</span>
+              </div>
+              <p className="text-xs text-white/50 leading-relaxed max-w-xs">
+                The next generation of real-time logistics and rider telemetry for modern delivery operations.
+              </p>
+            </div>
             <div>
-              <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Product</h3>
-              <ul className="flex flex-col gap-4 text-sm">
-                <li><a href="#features" className="hover:text-brand-red transition-all">Features</a></li>
-                <li><a href="#how-it-works" className="hover:text-brand-red transition-all">Solutions</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Pricing</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Updates</a></li>
+              <h4 className="text-white font-semibold mb-4 text-sm">Platform</h4>
+              <ul className="space-y-2 text-sm text-white/50">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">Admin Dashboard</Link></li>
+                <li><Link to="/rider-login" className="hover:text-white transition-colors">Rider Terminal</Link></li>
               </ul>
             </div>
-
-            {/* Company Links */}
             <div>
-              <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Company</h3>
-              <ul className="flex flex-col gap-4 text-sm">
-                <li><a href="#about" className="hover:text-brand-red transition-all">About Us</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Careers</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Contact</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Blog</a></li>
+              <h4 className="text-white font-semibold mb-4 text-sm">Resources</h4>
+              <ul className="space-y-2 text-sm text-white/50">
+                <li><a href="#stack" className="hover:text-white transition-colors">Tech Stack</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Support</a></li>
               </ul>
             </div>
-
-            {/* Legal Links */}
             <div>
-              <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Legal</h3>
-              <ul className="flex flex-col gap-4 text-sm">
-                <li><a href="#" className="hover:text-brand-red transition-all">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-brand-red transition-all">Cookie Policy</a></li>
+              <h4 className="text-white font-semibold mb-4 text-sm">Company</h4>
+              <ul className="space-y-2 text-sm text-white/50">
+                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
             </div>
           </div>
-
-          <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-slate-600">
-            <div className="font-bold uppercase tracking-widest text-[10px]">
+          <div className="max-w-6xl mx-auto px-6 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-white/40">
               © 2026 TrackRiders Inc. All rights reserved.
             </div>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-brand-red transition-all">Status</a>
-              <a href="#" className="hover:text-brand-red transition-all">Sitemap</a>
+            <div className="flex gap-4">
+              <a href="#" className="text-white/40 hover:text-white transition-colors text-xs">Twitter</a>
+              <a href="#" className="text-white/40 hover:text-white transition-colors text-xs">GitHub</a>
+              <a href="#" className="text-white/40 hover:text-white transition-colors text-xs">LinkedIn</a>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 };
