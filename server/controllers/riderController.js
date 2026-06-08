@@ -3,7 +3,7 @@ import Rider from '../models/rider.js';
 // Get all riders
 export const getAllRiders = async (req, res) => {
     try {
-        const riders = await Rider.find().sort({ createdAt: -1 });
+        const riders = await Rider.find({ adminId: req.user._id }).sort({ createdAt: -1 });
         res.json(riders);
     } catch (error) {
         console.error('Get all riders error:', error);
@@ -14,7 +14,7 @@ export const getAllRiders = async (req, res) => {
 // Get active riders
 export const getActiveRiders = async (req, res) => {
     try {
-        const riders = await Rider.find({ status: { $in: ['free', 'busy'] } }).sort({ createdAt: -1 });
+        const riders = await Rider.find({ adminId: req.user._id, status: { $in: ['free', 'busy'] } }).sort({ createdAt: -1 });
         res.json(riders);
     } catch (error) {
         console.error('Get active riders error:', error);
@@ -44,6 +44,7 @@ export const addRider = async (req, res) => {
             riderId,
             phone,
             vehicle,
+            adminId: req.user._id,
             status: 'free',
             location: {
                 type: 'Point',
@@ -64,7 +65,7 @@ export const updateRider = async (req, res) => {
     try {
         const { status, currentOrder } = req.body;
         const rider = await Rider.findOneAndUpdate(
-            { riderId: req.params.riderId },
+            { riderId: req.params.riderId, adminId: req.user._id },
             { status, currentOrder },
             { new: true }
         );
@@ -110,7 +111,7 @@ export const updateLocation = async (req, res) => {
 export const getRiderById = async (req, res) => {
     try {
         const { riderId } = req.params;
-        const rider = await Rider.findOne({ riderId });
+        const rider = await Rider.findOne({ riderId, adminId: req.user._id });
 
         if (!rider) {
             return res.status(404).json({ message: 'Rider not found' });
@@ -126,7 +127,7 @@ export const getRiderById = async (req, res) => {
 export const deleteRider = async (req, res) => {
     try {
         const { riderId } = req.params;
-        const rider = await Rider.findOneAndDelete({ riderId });
+        const rider = await Rider.findOneAndDelete({ riderId, adminId: req.user._id });
 
         if (!rider) {
             return res.status(404).json({ message: 'Rider not found' });

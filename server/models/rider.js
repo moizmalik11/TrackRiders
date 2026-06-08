@@ -59,6 +59,11 @@ const riderSchema = new mongoose.Schema({
             type: [Number],
             default: [0, 0]
         }
+    },
+    adminId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 }, {
     
