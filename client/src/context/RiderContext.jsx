@@ -28,6 +28,7 @@ export const RiderProvider = ({ children }) => {
   // Add new rider
   const addRider = async (riderData) => {
     try {
+      setLoading(true);
       // Validate required fields
       if (!riderData.name || !riderData.riderId || !riderData.phone || !riderData.vehicle) {
         throw new Error('All fields are required');
@@ -45,12 +46,15 @@ export const RiderProvider = ({ children }) => {
     } catch (err) {
       setError(err.message);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   // Update rider
   const updateRider = async (riderId, updateData) => {
     try {
+      setLoading(true);
       const updatedRider = await riderAPI.updateRider(riderId, updateData);
       setRiders(prevRiders =>
         prevRiders.map(rider =>
@@ -61,6 +65,8 @@ export const RiderProvider = ({ children }) => {
     } catch (err) {
       setError(err.message);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,11 +89,14 @@ export const RiderProvider = ({ children }) => {
   // Delete rider
   const deleteRider = async (riderId) => {
     try {
+      setLoading(true);
       await apiDeleteRider(riderId);
       setRiders(prevRiders => prevRiders.filter(rider => rider.riderId !== riderId));
     } catch (err) {
       setError(err.message);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
